@@ -1,0 +1,707 @@
+/* ==========================================================================
+   경매 입찰표 PDF 생성기 전용 스타일시트 (bid-form.css)
+   - 모다부동산법원경매 디자인 시스템 (Navy #102A43, Gold #C5A880, White #FFFFFF)
+   - 대법원 공식 기일입찰표 & 위임장 A4 인쇄 스타일 최적화
+   ========================================================================== */
+
+.bid-generator-page {
+  background-color: #f4f6fa;
+  min-height: 100vh;
+  padding-top: calc(var(--header-height) + 36px);
+  padding-bottom: 80px;
+}
+
+.generator-container {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Page Header Card */
+.gen-header-card {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 32px 36px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.gen-header-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-navy) 0%, var(--accent-gold) 100%);
+}
+
+.gen-header-title {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: var(--primary-navy);
+  margin-bottom: 6px;
+  letter-spacing: -0.02em;
+}
+
+.gen-header-desc {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+.gen-header-badge {
+  background: var(--accent-gold-bg);
+  border: 1px solid var(--accent-gold-light);
+  color: var(--accent-gold-dark);
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+/* Alert Info Banner */
+.gen-alert-info {
+  background: #ebf5fb;
+  border: 1px solid #c2e0f4;
+  border-radius: var(--radius-md);
+  padding: 14px 20px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.915rem;
+  color: #1a5276;
+}
+
+.gen-alert-info i {
+  color: #2980b9;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+/* Form Section Cards */
+.form-card {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 32px 36px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+
+.form-card:hover {
+  border-color: rgba(197, 168, 128, 0.4);
+}
+
+.form-card-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--primary-navy);
+  margin-bottom: 4px;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.form-card-desc {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+/* Agent Selection Radios */
+.agent-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.agent-radio-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 18px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: var(--transition);
+  background: #ffffff;
+}
+
+.agent-radio-label:hover {
+  border-color: var(--accent-gold);
+  background: var(--accent-gold-bg);
+}
+
+.agent-radio-label input[type="radio"] {
+  margin-top: 4px;
+  accent-color: var(--primary-navy);
+  width: 17px;
+  height: 17px;
+  cursor: pointer;
+}
+
+.radio-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.radio-main-title {
+  font-size: 0.975rem;
+  font-weight: 700;
+  color: var(--primary-navy);
+}
+
+.radio-sub-info {
+  font-size: 0.835rem;
+  color: var(--text-muted);
+}
+
+/* Selected Agent Details Card */
+.agent-info-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-md);
+  padding: 22px 24px;
+  margin-top: 14px;
+}
+
+.agent-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 24px;
+}
+
+.agent-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.agent-info-item.full-width {
+  grid-column: 1 / -1;
+}
+
+.agent-item-label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.agent-item-val {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--primary-navy);
+}
+
+/* Form Inputs & Grids */
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+.form-label {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--primary-navy);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.form-label .req {
+  color: #e53e3e;
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: var(--text-main);
+  background-color: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+  outline: none;
+}
+
+.form-control:focus {
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 0 3px rgba(197, 168, 128, 0.2);
+}
+
+.form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23334E68' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 16px;
+  padding-right: 40px;
+}
+
+/* Case Number Input Row */
+.case-number-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.case-year-select {
+  width: 120px;
+  flex-shrink: 0;
+}
+
+.case-badge {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--primary-navy);
+  padding: 0 4px;
+}
+
+.case-input {
+  flex: 1;
+}
+
+.btn-case-search {
+  padding: 12px 18px;
+  background-color: #486581;
+  color: #ffffff;
+  font-size: 0.88rem;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  transition: var(--transition);
+}
+
+.btn-case-search:hover {
+  background-color: var(--primary-navy);
+}
+
+/* Bidder Type Toggle (개인 / 법인) */
+.bidder-type-tabs {
+  display: flex;
+  background: #f1f5f9;
+  border-radius: var(--radius-sm);
+  padding: 4px;
+  margin-bottom: 24px;
+}
+
+.bidder-type-btn {
+  flex: 1;
+  padding: 10px 16px;
+  text-align: center;
+  font-size: 0.925rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  border-radius: 4px;
+  background: transparent;
+  transition: var(--transition);
+}
+
+.bidder-type-btn.active {
+  background: #ffffff;
+  color: var(--primary-navy);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* Resident Registration Number Row */
+.rrn-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rrn-input {
+  flex: 1;
+  text-align: center;
+}
+
+.rrn-dash {
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+/* Address Row */
+.address-row-1 {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.btn-postcode-search {
+  background: var(--primary-navy);
+  color: #ffffff;
+  padding: 12px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: var(--transition);
+}
+
+.btn-postcode-search:hover {
+  background: var(--accent-gold-dark);
+}
+
+.address-row-2 {
+  margin-bottom: 8px;
+}
+
+/* Blank Price Checkbox Callout Box */
+.blank-price-box {
+  background: #fffdf9;
+  border: 1px solid #f6e0b5;
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  margin-bottom: 24px;
+}
+
+.blank-price-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.blank-price-label input[type="checkbox"] {
+  margin-top: 3px;
+  accent-color: var(--primary-navy);
+  width: 17px;
+  height: 17px;
+}
+
+.blank-price-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #b7791f;
+  margin-bottom: 6px;
+}
+
+.blank-price-desc {
+  font-size: 0.84rem;
+  color: #744210;
+  line-height: 1.6;
+}
+
+/* Price Korean Amount Display */
+.price-korean-text {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent-gold-dark);
+  margin-top: 4px;
+  min-height: 20px;
+}
+
+/* Agreement & Submit Area */
+.agreement-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+  font-size: 0.88rem;
+  color: var(--text-body);
+}
+
+.agreement-box input[type="checkbox"] {
+  accent-color: var(--primary-navy);
+  width: 18px;
+  height: 18px;
+}
+
+.btn-generate-pdf {
+  width: 100%;
+  padding: 18px 24px;
+  background: linear-gradient(135deg, var(--primary-navy) 0%, #1b3a5c 100%);
+  color: #ffffff;
+  font-size: 1.15rem;
+  font-weight: 800;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  box-shadow: 0 6px 20px rgba(16, 42, 67, 0.25);
+  transition: var(--transition);
+  cursor: pointer;
+}
+
+.btn-generate-pdf:hover {
+  background: linear-gradient(135deg, var(--accent-gold-dark) 0%, #9a784d 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(197, 168, 128, 0.35);
+}
+
+.btn-generate-pdf i {
+  font-size: 1.25rem;
+}
+
+/* ==========================================================================
+   Print Preview Modal (화면 미리보기 모달)
+   ========================================================================== */
+.print-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 27, 44, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 2000;
+  overflow-y: auto;
+  padding: 40px 20px;
+}
+
+.print-modal.open {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modal-action-bar {
+  max-width: 800px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  padding: 16px 24px;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.modal-action-bar h3 {
+  font-size: 1.15rem;
+  color: var(--primary-navy);
+}
+
+.modal-btn-group {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-modal-print {
+  background: var(--primary-navy);
+  color: #ffffff;
+  padding: 8px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.btn-modal-close {
+  background: #f1f5f9;
+  color: var(--text-body);
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   Court Printable Sheet Standards (기일입찰표 및 위임장 표준 서식)
+   ========================================================================== */
+#courtPrintArea {
+  display: none; /* 화면에서는 숨기고 인쇄 및 모달 미리보기 시에만 표시 */
+  background: #ffffff;
+}
+
+.court-sheet {
+  width: 210mm;
+  min-height: 297mm;
+  padding: 15mm 15mm;
+  margin: 0 auto;
+  background: #ffffff;
+  color: #000000;
+  font-family: 'Batang', 'Gungsuh', 'Noto Serif KR', serif;
+  box-sizing: border-box;
+  page-break-after: always;
+}
+
+.court-sheet:last-child {
+  page-break-after: avoid;
+}
+
+/* Sheet Typography & Table */
+.court-title-box {
+  text-align: center;
+  margin-bottom: 14px;
+  border-bottom: 2px solid #000;
+  padding-bottom: 8px;
+}
+
+.court-title-box h1 {
+  font-size: 24pt;
+  font-weight: 900;
+  letter-spacing: 0.35em;
+  margin-bottom: 6px;
+}
+
+.court-title-box p {
+  font-size: 9pt;
+  color: #333;
+}
+
+.court-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 10pt;
+}
+
+.court-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 14px;
+  font-size: 9.5pt;
+  table-layout: fixed;
+}
+
+.court-table th,
+.court-table td {
+  border: 1px solid #000000;
+  padding: 6px 8px;
+  vertical-align: middle;
+  line-height: 1.45;
+}
+
+.court-table th {
+  background: #f2f2f2;
+  font-weight: 700;
+  text-align: center;
+}
+
+.court-table .center {
+  text-align: center;
+}
+
+.court-table .right {
+  text-align: right;
+}
+
+.court-val {
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 600;
+  color: #000;
+}
+
+.court-notice-box {
+  border: 1px dashed #666;
+  padding: 8px 12px;
+  font-size: 8pt;
+  line-height: 1.5;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.court-sign-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  border: 1px solid #000;
+  margin-top: 14px;
+  font-size: 10pt;
+}
+
+/* ==========================================================================
+   @media print Rules (실제 브라우저 인쇄 시)
+   ========================================================================== */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 10mm;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  #courtPrintArea,
+  #courtPrintArea * {
+    visibility: visible;
+  }
+
+  #courtPrintArea {
+    display: block !important;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+  }
+
+  .site-header,
+  .site-footer,
+  .mobile-floating-bar,
+  .bid-generator-page,
+  .print-modal {
+    display: none !important;
+  }
+
+  .court-sheet {
+    width: 100% !important;
+    min-height: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    page-break-after: always !important;
+  }
+}
+
+/* ==========================================================================
+   Responsive (Mobile)
+   ========================================================================== */
+@media (max-width: 768px) {
+  .gen-header-card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 24px 20px;
+  }
+
+  .form-card {
+    padding: 24px 18px;
+  }
+
+  .agent-info-grid,
+  .form-grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .case-number-row {
+    flex-wrap: wrap;
+  }
+
+  .case-year-select {
+    width: 100px;
+  }
+}
