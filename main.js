@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function () {
       '',
       '■ 사건 정보',
       '· 법원: ' + val('court'),
-      '· 사건번호: ' + val('caseYear') + '타경 ' + val('caseNumber') + (val('itemNumber') ? ' (물건번호 ' + val('itemNumber') + ')' : ''),
+      '· 사건번호: ' + val('caseYear') + '타경' + val('caseNumber') + (val('itemNumber') ? ' (물건번호 ' + val('itemNumber') + ')' : ''),
       '· 매각기일: ' + val('bidDate'),
       '· 물건 소재지: ' + val('propertyAddress'),
       '',
