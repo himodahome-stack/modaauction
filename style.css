@@ -1147,6 +1147,7 @@ section[id] { scroll-margin-top: calc(var(--header-height) + 16px); }
 .site-footer {
   padding: 54px 0 30px;
   background: var(--pine);
+  border-top: 1px solid rgba(203, 170, 110, 0.22);
   color: #B4BCB2;
   font-size: 14px;
 }
