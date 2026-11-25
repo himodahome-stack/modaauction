@@ -1082,24 +1082,23 @@ section[id] { scroll-margin-top: calc(var(--header-height) + 16px); }
 }
 .map-card .map-address { font-size: 15.5px; color: var(--text-main); font-weight: 700; margin-bottom: 4px; }
 .map-card .map-sub { color: var(--text-muted); font-size: 13.5px; margin-bottom: 16px; }
-.map-placeholder {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+.map-embed {
+  position: relative;
   height: 190px;
   margin-bottom: 16px;
+  border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  background:
-    repeating-linear-gradient(0deg, #ECE9E1 0 1px, transparent 1px 28px),
-    repeating-linear-gradient(90deg, #ECE9E1 0 1px, transparent 1px 28px),
-    #FBFAF6;
-  color: var(--text-muted);
-  font-size: 13px;
-  text-align: center;
+  overflow: hidden;
+  background: #FBFAF6;
 }
-.map-placeholder svg { width: 34px; height: 34px; color: var(--gold-deep); }
+.map-embed iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
 .map-links { display: flex; gap: 8px; flex-wrap: wrap; }
 
 /* ---------- Contact ---------- */
@@ -1340,6 +1339,7 @@ section[id] { scroll-margin-top: calc(var(--header-height) + 16px); }
   .two-col, .principle-grid, .info-cards, .contact-grid, .fee-grid { grid-template-columns: 1fr; }
   .office-photos { grid-template-columns: repeat(3, 1fr); gap: 8px; }
   .office-photos img { height: 150px; }
+  .map-embed { height: 230px; }
   .roam-card { flex-direction: column; align-items: flex-start; }
   .form-section { padding: 22px 20px 8px; }
   .field-grid { grid-template-columns: 1fr; gap: 0; }
