@@ -568,6 +568,46 @@ section[id] { scroll-margin-top: calc(var(--header-height) + 16px); }
 }
 .chip-crimson { background: #FBEBEB; color: var(--crimson); }
 
+/* ---------- Insights / active channel cards ---------- */
+.placeholder-grid.channel-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.placeholder-card.channel-card {
+  display: block;
+  padding: 40px 30px 34px;
+  text-align: center;
+  color: inherit;
+  text-decoration: none;
+  background: #fff;
+  border: 1.5px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+.placeholder-card.channel-card:hover {
+  transform: translateY(-3px);
+  border-color: #BFD2E3;
+  box-shadow: var(--shadow-md);
+}
+.placeholder-card.channel-card:focus-visible {
+  outline: 3px solid rgba(15, 45, 74, 0.35);
+  outline-offset: 3px;
+}
+.channel-card .ph-icon { width: 56px; height: 56px; }
+.channel-card .ph-icon-blog { background: #E7F5EC; color: #0B7A47; }
+.channel-card .ph-icon-youtube { background: #FBEBEB; color: var(--crimson); }
+.channel-card h3 { margin-bottom: 8px; font-size: 19px; color: var(--text-main); }
+.channel-card p { margin: 0 0 18px; line-height: 1.65; }
+.channel-cta {
+  display: inline-block;
+  padding: 9px 18px;
+  border-radius: var(--radius-full);
+  background: var(--navy);
+  color: #fff;
+  font-size: 13.5px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  transition: var(--transition);
+}
+.channel-card:hover .channel-cta { background: var(--navy-soft); }
+
 /* ---------- FAQ ---------- */
 .faq-list { max-width: 900px; }
 .faq-item {
@@ -1185,6 +1225,7 @@ section[id] { scroll-margin-top: calc(var(--header-height) + 16px); }
   .steps { grid-template-columns: 1fr; gap: 26px; }
   .step-image { height: 190px; }
   .placeholder-grid { grid-template-columns: 1fr; }
+  .placeholder-grid.channel-grid { grid-template-columns: 1fr; }
   .two-col, .principle-grid, .info-cards, .contact-grid, .fee-grid { grid-template-columns: 1fr; }
   .office-photos { grid-template-columns: repeat(3, 1fr); gap: 8px; }
   .office-photos img { height: 150px; }
