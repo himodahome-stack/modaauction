@@ -172,8 +172,9 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      // 안내 피드백
-      alert(`[사건 조회 안내]\n${court} 2026타경 ${caseNum} 사건이 확인되었습니다.\n입찰기일과 최저매각가격을 확인하신 후 보증금액을 기재해 주세요.`);
+      // 입력 내용 확인 (실제 사건 조회가 아닙니다)
+      const caseYear = document.getElementById('caseYear') ? document.getElementById('caseYear').value : '';
+      alert(`[입력 내용 확인]\n${court} ${caseYear}타경 ${caseNum}\n\n이 화면은 입력하신 내용만 보여 드립니다. 실제 입찰기일·최저매각가격·보증금액은 대법원 법원경매정보(courtauction.go.kr)에서 확인해 주세요.`);
     });
   }
 

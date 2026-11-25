@@ -71,7 +71,7 @@
       <!-- 상단 헤더 카드 -->
       <div class="gen-header-card">
         <div>
-          <h1 class="gen-header-title">경매 입찰표 PDF 생성기</h1>
+          <h2 class="gen-header-title">경매 입찰표 PDF 생성기</h2>
           <p class="gen-header-desc">기일입찰표 + 위임장을 법정 표준 규격으로 자동으로 생성합니다.</p>
         </div>
         <div class="gen-header-badge">
@@ -83,7 +83,7 @@
       <!-- 상단 알림 바 -->
       <div class="gen-alert-info">
         <i class="fa-solid fa-circle-info"></i>
-        <span>사건 정보 조회는 <strong>오늘부터 2주 이내</strong> 매각기일이 예정된 사건만 조회됩니다.</span>
+        <span>사건번호와 매각기일은 <strong>대법원 법원경매정보(courtauction.go.kr)</strong>에서 확인한 뒤 입력해 주세요.</span>
       </div>
 
       <!-- 입력 양식 폼 -->
@@ -241,7 +241,7 @@
               <span class="case-badge">타경</span>
               <input type="text" id="caseNum" class="form-control case-input" placeholder="사건번호 (예: 12345)" required />
               <button type="button" class="btn-case-search" id="btnCaseSearch">
-                <i class="fa-solid fa-magnifying-glass"></i> 정보조회
+                <i class="fa-solid fa-magnifying-glass"></i> 입력 확인
               </button>
             </div>
           </div>
@@ -391,7 +391,7 @@
           </div>
 
           <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; margin-top: 10px;">
-            정보조회 시 이번 기일 최저매각가격의 10%가 기본으로 입력됩니다(재매각 등 특별매각조건이 공고된 물건은 20%~30%). 다르면 직접 고쳐 주세요.<br />
+            입찰보증금은 통상 최저매각가격의 10%입니다(재매각 등 특별매각조건이 공고된 물건은 20%~30%). 매각물건명세서에서 확인해 직접 입력해 주세요.<br />
             <span style="color: #c5221f; font-weight: 700;">※ 보증금액은 반드시 대법원 법원경매정보 사이트에서 재확인하세요.</span>
           </p>
         </div>
