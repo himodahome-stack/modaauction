@@ -1360,6 +1360,26 @@ section[id] { scroll-margin-top: calc(var(--header-height) + 16px); }
   .policy-contact span { flex: none; }
 }
 
+@media (max-width: 640px) {
+  .policy-table { min-width: 0; }
+  .policy-table thead { display: none; }
+  .policy-table, .policy-table tbody, .policy-table tr, .policy-table th, .policy-table td { display: block; width: auto; }
+  .policy-table caption { padding: 10px 16px 2px; }
+  .policy-table tr { padding: 14px 16px; border-bottom: 1px solid var(--border-light); }
+  .policy-table tbody tr:last-child { border-bottom: 0; }
+  .policy-table tbody th { padding: 0 0 6px; border: 0; background: transparent; font-size: 14.5px; }
+  .policy-table tbody td { padding: 0 0 8px; border: 0; }
+  .policy-table tbody td:last-child { padding-bottom: 0; }
+  .policy-table tbody td::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 2px;
+    color: var(--text-muted);
+    font-size: 12.3px;
+    font-weight: 700;
+  }
+}
+
 @media (max-width: 560px) {
   .contact-line { flex-direction: column; align-items: flex-start; gap: 4px; }
   .contact-line strong { margin-left: 0; }
