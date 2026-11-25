@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>대리입찰 신청 | 모다부동산법원경매</title>
+  <meta name="description" content="모다부동산법원경매 대리입찰 신청서. 사건 정보, 의뢰인·입찰자 정보, 보증금 반환 계좌를 남겨 주시면 확인 후 연락드립니다." />
+  <link rel="icon" type="image/png" href="/images/logo.png" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" href="/style.css" />
+  <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+  <script src="/main.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">본문으로 바로가기</a>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/" aria-label="모다부동산법원경매 홈으로">
+      <img class="brand-logo" src="/images/logo.png" alt="모다부동산법원경매 로고" />
+      <span class="brand-text">
+        <span class="brand-name">모다부동산법원경매</span>
+        <span class="brand-sub">공인중개사사무소 · 매수신청대리</span>
+      </span>
+    </a>
+    <nav class="main-nav" aria-label="주 메뉴">
+      <a href="/auction">대리입찰 안내</a>
+      <a href="/auction/apply">신청하기</a>
+      <a href="/auction/bid-pdf">입찰표 생성</a>
+      <a href="/auction/process">진행 절차</a>
+      <a href="/insights">경공매 인사이트</a>
+      <a href="/about">사무소 소개</a>
+      <a href="/contact">상담</a>
+    </nav>
+    <button class="nav-toggle" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="mobileDrawer">☰</button>
+  </div>
+  <div class="mobile-drawer" id="mobileDrawer">
+    <a href="/auction" data-nav>대리입찰 안내</a>
+    <a href="/auction/apply" data-nav>신청하기</a>
+    <a href="/auction/bid-pdf" data-nav>입찰표 생성</a>
+    <a href="/auction/process" data-nav>진행 절차</a>
+    <a href="/insights" data-nav>경공매 인사이트</a>
+    <a href="/about" data-nav>사무소 소개</a>
+    <a href="/contact" data-nav>상담</a>
+    <a class="drawer-contact" href="tel:01073088284">전화 상담 010-7308-8284</a>
+  </div>
+</header>
+
+<main id="main">
+  <section class="page-hero">
+    <div class="container">
+      <nav class="breadcrumb" aria-label="현재 위치"><a href="/">홈</a><span>›</span><a href="/auction">대리입찰 안내</a><span>›</span>신청하기</nav>
+      <div class="page-hero-row">
+        <img class="page-thumb" src="/images/step_1.jpg" alt="대리입찰 신청서를 작성하는 모습" />
+        <div>
+          <h1>대리입찰 신청</h1>
+          <p class="page-lead">사건 정보와 입찰자 정보를 남겨 주시면, 담당자가 확인한 뒤 진행 가능 여부와 다음 절차를 안내해 드립니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-soft">
+    <div class="container">
+      <div class="form-shell">
+
+        <div class="form-intro-banners">
+          <div class="notice-box notice-box-blue">
+            이 신청서는 <strong>홈페이지에 입력만 되는 양식</strong>입니다. 작성이 끝나면 화면에서 <strong>이메일 보내기·내용 복사·카톡 상담</strong> 중 편한 방법으로 보내 주세요. 입력하신 정보는 서버에 저장되지 않습니다.
+          </div>
+          <div class="notice-box notice-box-gold">
+            접수 내용을 확인한 뒤 <strong>담당자가 직접 연락</strong>드립니다. 매각기일이 임박한 경우에는 <a href="tel:01073088284">010-7308-8284</a>로 전화 주시면 더 빠릅니다.
+          </div>
+          <div class="notice-box">
+            <strong>같은 물건에는 1건만 입찰할 수 있습니다.</strong><br />
+            같은 사건의 같은 물건(물건번호)에는 한 분의 입찰만 대리할 수 있고, 한 대리인이 같은 물건에 두 사람 이상의 입찰을 대리하면 모두 무효가 됩니다(대법원 재판예규 재민 2004-3 제31조 제7호). 가족·지인이라도 같은 물건에는 함께 맡기실 수 없으며, 물건번호가 다른 물건은 각각 신청하실 수 있습니다.
+          </div>
+        </div>
+
+        <form id="applyForm" novalidate>
+          <div class="form-error" id="formError" role="alert"></div>
+
+          <!-- 1. 사건 정보 -->
+          <fieldset class="form-section">
+            <legend><span class="legend-num">1.</span>사건 정보</legend>
+            <p class="form-section-desc">법원 경매정보에서 확인한 사건번호와 매각기일을 적어 주세요.</p>
+
+            <div class="field-grid">
+              <div class="field">
+                <label for="court">법원 <span class="req">*</span></label>
+                <select class="select" id="court" name="court" required>
+                  <option value="">선택</option>
+                  <option>수원지방법원</option>
+                  <option>수원지방법원 안산지원</option>
+                  <option>수원지방법원 안양지원</option>
+                  <option>인천지방법원</option>
+                  <option>인천지방법원 부천지원</option>
+                  <option>그 외 법원 (낙찰로 안내)</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="caseYear">사건번호 <span class="req">*</span></label>
+                <div class="case-number-row">
+                  <select class="select" id="caseYear" name="caseYear" aria-label="사건 연도">
+                    <option>2026</option>
+                    <option>2025</option>
+                    <option>2024</option>
+                    <option>2023</option>
+                    <option>2022</option>
+                    <option>2021</option>
+                    <option>2020</option>
+                  </select>
+                  <span class="static-tag">타경</span>
+                  <input class="input" id="caseNumber" name="caseNumber" type="text" inputmode="numeric" placeholder="12345" aria-label="사건번호" />
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="bidDate">매각기일 <span class="req">*</span></label>
+                <input class="input" id="bidDate" name="bidDate" type="date" required />
+              </div>
+
+              <div class="field">
+                <label for="itemNumber">물건번호</label>
+                <input class="input" id="itemNumber" name="itemNumber" type="text" inputmode="numeric" placeholder="예: 1" />
+                <span class="hint">여러 물건이 함께 매각되는 사건이면 입찰할 물건번호를 적어 주세요.</span>
+              </div>
+
+              <div class="field field-full">
+                <label for="propertyAddress">물건 소재지 <span class="req">*</span></label>
+                <input class="input" id="propertyAddress" name="propertyAddress" type="text" placeholder="예: 경기도 시흥시 장현동 000-0" />
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- 2. 의뢰인 / 입찰자 정보 -->
+          <fieldset class="form-section">
+            <legend><span class="legend-num">2.</span>의뢰인 / 입찰자 정보</legend>
+            <p class="form-section-desc">연락 가능한 번호와 이메일을 적어 주세요. 입찰표에 기재될 입찰자 정보도 정확히 확인해 주세요.</p>
+
+            <div class="field-grid">
+              <div class="field">
+                <label for="clientName">의뢰인 이름 <span class="req">*</span></label>
+                <input class="input" id="clientName" name="clientName" type="text" autocomplete="name" />
+              </div>
+              <div class="field">
+                <label for="clientPhone">의뢰인 연락처 <span class="req">*</span></label>
+                <input class="input" id="clientPhone" name="clientPhone" type="tel" inputmode="tel" placeholder="010-0000-0000" autocomplete="tel" />
+              </div>
+              <div class="field field-full">
+                <label for="clientEmail">이메일 <span class="req">*</span></label>
+                <input class="input" id="clientEmail" name="clientEmail" type="email" placeholder="example@email.com" autocomplete="email" />
+                <span class="hint">진행 안내와 서류 안내를 이메일로도 보내 드립니다.</span>
+              </div>
+            </div>
+
+            <div class="check-row" style="margin-bottom:16px;">
+              <input type="checkbox" id="sameAsClient" />
+              <label for="sameAsClient">의뢰인과 입찰자가 같습니다 (이름·연락처·이메일을 위 내용으로 채웁니다)</label>
+            </div>
+
+            <div class="field">
+              <span class="field-label">입찰자 구분 <span class="req">*</span></span>
+              <div class="segmented">
+                <label><input type="radio" name="bidderType" value="개인 명의" checked /><span>개인 명의</span></label>
+                <label><input type="radio" name="bidderType" value="법인 명의" /><span>법인 명의</span></label>
+              </div>
+              <span class="hint">법인 명의는 법인인감 날인과 법인 서류로 진행합니다.</span>
+            </div>
+
+            <div class="field-grid">
+              <div class="field">
+                <label for="bidderName">입찰자 이름 <span class="req">*</span></label>
+                <input class="input" id="bidderName" name="bidderName" type="text" placeholder="입찰표에 기재할 이름" />
+              </div>
+              <div class="field">
+                <label for="bidderPhone">입찰자 연락처</label>
+                <input class="input" id="bidderPhone" name="bidderPhone" type="tel" inputmode="tel" placeholder="010-0000-0000" />
+              </div>
+              <div class="field field-full">
+                <label for="bidderAddress">입찰자 주소 <span class="req">*</span></label>
+                <div class="address-row">
+                  <input class="input" id="bidderAddress" name="bidderAddress" type="text" placeholder="주소 검색 버튼을 눌러 주세요" readonly />
+                  <button class="btn-inline" type="button" id="btnPostcode">주소 검색</button>
+                </div>
+                <input type="hidden" id="bidderZonecode" name="bidderZonecode" />
+                <span class="hint">도로명주소로 검색됩니다. 동·호수를 함께 적어 주세요.</span>
+              </div>
+              <div class="field">
+                <label for="bidAmount">입찰 금액 (원) <span class="req">*</span></label>
+                <input class="input" id="bidAmount" name="bidAmount" type="text" inputmode="numeric" placeholder="0" />
+                <span class="hint">의뢰인이 정하신 금액을 적어 주세요. 최종 금액은 입찰 전 다시 확인합니다.</span>
+              </div>
+              <div class="field">
+                <label for="depositAmount">보증 금액 (원) <span class="req">*</span></label>
+                <input class="input" id="depositAmount" name="depositAmount" type="text" inputmode="numeric" placeholder="0" />
+                <span class="hint">통상 최저매각가격의 10%. 매각물건명세서에서 꼭 다시 확인해 주세요.</span>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- 3. 보증금 반환 계좌 -->
+          <fieldset class="form-section">
+            <legend><span class="legend-num">3.</span>보증금 반환 계좌</legend>
+            <p class="form-section-desc">패찰 시 입찰보증금을 이 계좌로 돌려 드립니다. 입찰자 본인 명의 계좌를 권장합니다.</p>
+
+            <div class="field-grid">
+              <div class="field">
+                <label for="bankName">은행 <span class="req">*</span></label>
+                <input class="input" id="bankName" name="bankName" type="text" list="bankList" placeholder="예: 국민은행" />
+                <datalist id="bankList">
+                  <option>KB국민은행</option>
+                  <option>신한은행</option>
+                  <option>우리은행</option>
+                  <option>하나은행</option>
+                  <option>NH농협은행</option>
+                  <option>IBK기업은행</option>
+                  <option>카카오뱅크</option>
+                  <option>토스뱅크</option>
+                  <option>SC제일은행</option>
+                  <option>한국씨티은행</option>
+                  <option>부산은행</option>
+                  <option>대구은행</option>
+                  <option>경남은행</option>
+                  <option>광주은행</option>
+                  <option>전북은행</option>
+                  <option>제주은행</option>
+                  <option>수협은행</option>
+                  <option>새마을금고</option>
+                  <option>신협</option>
+                  <option>우체국</option>
+                </datalist>
+              </div>
+              <div class="field">
+                <label for="accountNumber">계좌번호 <span class="req">*</span></label>
+                <input class="input" id="accountNumber" name="accountNumber" type="text" inputmode="numeric" placeholder="숫자만 입력 (하이픈 가능)" />
+              </div>
+              <div class="field">
+                <label for="accountHolder">예금주 <span class="req">*</span></label>
+                <input class="input" id="accountHolder" name="accountHolder" type="text" placeholder="예금주 이름" />
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- 동의 및 제출 -->
+          <div class="panel">
+            <div class="check-row">
+              <input type="checkbox" id="agreeDisclaimer" />
+              <label for="agreeDisclaimer">면책 조항에 동의합니다. (단순 대리입찰은 의뢰인이 결정한 입찰가를 대신 제출하는 서비스이며, 입찰가·권리분석 책임은 의뢰인에게 있고, 낙찰·유찰 결과와 무관하게 수수료는 동일 적용됩니다.)</label>
+            </div>
+            <div class="check-row">
+              <input type="checkbox" id="agreePrivacy" />
+              <label for="agreePrivacy">개인정보 수집 및 이용에 동의합니다. (입력하신 정보는 이 브라우저에서 신청 내용을 정리하는 데만 사용되며 서버에 저장되지 않습니다.)</label>
+            </div>
+            <div class="form-submit-row" style="margin-top:20px;">
+              <button class="btn btn-crimson" type="submit">신청 내용 확인하기</button>
+              <p class="form-submit-note">* 표시는 필수 입력입니다. 확인 후 이메일·카톡으로 보내 주세요.</p>
+            </div>
+          </div>
+        </form>
+
+        <!-- 신청 내용 확인 -->
+        <div class="apply-result" id="applyResult" hidden>
+          <h2>신청 내용을 확인해 주세요</h2>
+          <p>아래 내용을 <strong>이메일로 보내기</strong> 또는 <strong>내용 복사 후 카톡 1:1 상담</strong>으로 보내 주시면 접수가 완료됩니다. 홈페이지에서는 자동으로 전송되지 않습니다.</p>
+          <div class="summary-box" id="summaryText"></div>
+          <div class="result-actions">
+            <a class="btn btn-navy" id="mailtoLink" href="mailto:hi.modahome@gmail.com">이메일로 보내기</a>
+            <button class="btn btn-outline" type="button" id="copySummaryBtn">내용 복사</button>
+            <a class="btn btn-crimson" href="https://pf.kakao.com/_ZgCJX/chat" target="_blank" rel="noopener">카톡 1:1 상담 열기</a>
+            <a class="btn btn-outline" href="tel:01073088284">전화 010-7308-8284</a>
+          </div>
+          <p id="copyMessage" style="margin:14px 0 0; color:#2F7D5A; font-size:14px;"></p>
+        </div>
+
+        <p style="margin:26px 0 0; color:var(--text-muted); font-size:13.5px;">
+          신청 전에 <a href="/auction">수수료와 준비 서류</a>, <a href="/auction/process">진행 절차와 취소·환불 규정</a>을 함께 확인해 주세요.
+        </p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3>모다부동산법원경매 공인중개사사무소</h3>
+        <p>경기도 시흥시 시청로 25, 3층 341호 (장현동, 시티프론트 561 The Five)</p>
+        <p>대표: 박지은 (대표 공인중개사)</p>
+        <div class="footer-contact">
+          <a href="tel:01073088284">010-7308-8284</a>
+          <a href="tel:0313138284">031-313-8284</a>
+          <a href="mailto:hi.modahome@gmail.com">hi.modahome@gmail.com</a>
+        </div>
+      </div>
+      <div class="footer">
+        <h4 class="footer-title">등록 정보</h4>
+        <ul class="footer-list">
+          <li>사업자등록번호: 405-11-44704</li>
+          <li>공인중개사 개설등록번호: 41390-2026-00057</li>
+          <li>매수신청대리 등록번호: 수원지방법원 08-26-70</li>
+          <li>공제 및 보증보험 가입</li>
+        </ul>
+      </div>
+      <div class="footer">
+        <h4 class="footer-title">바로가기</h4>
+        <ul class="footer-list">
+          <li><a href="/auction">대리입찰 안내</a></li>
+          <li><a href="/auction/apply">대리입찰 신청</a></li>
+          <li><a href="/auction/bid-pdf">입찰표 생성</a></li>
+          <li><a href="/auction/process">진행 절차</a></li>
+          <li><a href="/about">사무소 소개</a></li>
+          <li><a href="/contact">상담 문의</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-disclaimer">면책: 단순 대리입찰은 의뢰인이 결정한 입찰가를 대신 제출하는 서비스이며, 입찰가·권리분석 책임은 의뢰인에게 있고, 낙찰·패찰 결과와 무관하게 수수료는 동일 적용됩니다.</p>
+      <p class="footer-copy">© 2026 모다부동산법원경매 공인중개사사무소. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<a class="kakao-float" href="https://pf.kakao.com/_ZgCJX/chat" target="_blank" rel="noopener">⚖️ 경매상담 카톡문의</a>
+</body>
+</html>

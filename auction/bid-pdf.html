@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>경매 입찰표 생성기 | 모다부동산법원경매</title>
+  <meta name="description" content="기일입찰표와 위임장을 법정 표준 규격으로 자동 생성하는 경매 입찰표 PDF 생성기입니다. 입력하신 정보는 서버에 저장되지 않습니다." />
+  <link rel="icon" type="image/png" href="/images/logo.png" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="/bid-form.css" />
+  <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+  <script src="/main.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">본문으로 바로가기</a>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/" aria-label="모다부동산법원경매 홈으로">
+      <img class="brand-logo" src="/images/logo.png" alt="모다부동산법원경매 로고" />
+      <span class="brand-text">
+        <span class="brand-name">모다부동산법원경매</span>
+        <span class="brand-sub">공인중개사사무소 · 매수신청대리</span>
+      </span>
+    </a>
+    <nav class="main-nav" aria-label="주 메뉴">
+      <a href="/auction">대리입찰 안내</a>
+      <a href="/auction/apply">신청하기</a>
+      <a href="/auction/bid-pdf">입찰표 생성</a>
+      <a href="/auction/process">진행 절차</a>
+      <a href="/insights">경공매 인사이트</a>
+      <a href="/about">사무소 소개</a>
+      <a href="/contact">상담</a>
+    </nav>
+    <button class="nav-toggle" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="mobileDrawer">☰</button>
+  </div>
+  <div class="mobile-drawer" id="mobileDrawer">
+    <a href="/auction" data-nav>대리입찰 안내</a>
+    <a href="/auction/apply" data-nav>신청하기</a>
+    <a href="/auction/bid-pdf" data-nav>입찰표 생성</a>
+    <a href="/auction/process" data-nav>진행 절차</a>
+    <a href="/insights" data-nav>경공매 인사이트</a>
+    <a href="/about" data-nav>사무소 소개</a>
+    <a href="/contact" data-nav>상담</a>
+    <a class="drawer-contact" href="tel:01073088284">전화 상담 010-7308-8284</a>
+  </div>
+</header>
+
+<div class="page-hero" style="padding-bottom:34px;">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="현재 위치"><a href="/">홈</a><span>›</span><a href="/auction">대리입찰 안내</a><span>›</span>입찰표 생성</nav>
+    <div class="page-hero-row">
+      <img class="page-thumb" src="/images/step_2.jpg" alt="위임 서류에 서명하는 모습" />
+      <div>
+        <h1>경매 입찰표 생성기</h1>
+        <p class="page-lead">기일입찰표와 위임장을 법정 표준 서식으로 만들어 인쇄하거나 PDF로 저장할 수 있습니다. 인감증명서 방식으로 직접 준비하실 때 사용하세요.</p>
+        <p class="page-meta">입력하신 정보는 서버에 저장되지 않고 이 브라우저에서만 사용됩니다.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="main">
+<main class="bid-generator-page">
+    <div class="generator-container">
+
+      <!-- 상단 헤더 카드 -->
+      <div class="gen-header-card">
+        <div>
+          <h1 class="gen-header-title">경매 입찰표 PDF 생성기</h1>
+          <p class="gen-header-desc">기일입찰표 + 위임장을 법정 표준 규격으로 자동으로 생성합니다.</p>
+        </div>
+        <div class="gen-header-badge">
+          <i class="fa-solid fa-shield-halved"></i>
+          <span>법원 표준 서식 연동</span>
+        </div>
+      </div>
+
+      <!-- 상단 알림 바 -->
+      <div class="gen-alert-info">
+        <i class="fa-solid fa-circle-info"></i>
+        <span>사건 정보 조회는 <strong>오늘부터 2주 이내</strong> 매각기일이 예정된 사건만 조회됩니다.</span>
+      </div>
+
+      <!-- 입력 양식 폼 -->
+      <form id="bidGeneratorForm" novalidate>
+
+        <!-- 1. 대리인 선택 카드 -->
+        <div class="form-card">
+          <h2 class="form-card-title">
+            <i class="fa-solid fa-user-tie" style="color: var(--accent-gold);"></i>
+            대리인 선택
+          </h2>
+          <p class="form-card-desc">입찰을 직접 진행하시는지, 또는 대리인에게 위임하시는지 선택해 주세요.</p>
+
+          <div class="agent-radio-group">
+            <label class="agent-radio-label">
+              <input type="radio" name="agentType" value="moda" checked />
+              <div class="radio-content">
+                <span class="radio-main-title">모다부동산법원경매 대표에게 대리입찰 의뢰</span>
+                <span class="radio-sub-info">— 매수신청대리 등록 공인중개사 (기일입찰표 + 위임장 자동 생성)</span>
+              </div>
+            </label>
+
+            <label class="agent-radio-label">
+              <input type="radio" name="agentType" value="self" />
+              <div class="radio-content">
+                <span class="radio-main-title">본인이 직접 입찰</span>
+                <span class="radio-sub-info">— 대리인란 없이 기일입찰표만 생성 (위임장 없음)</span>
+              </div>
+            </label>
+
+            <label class="agent-radio-label">
+              <input type="radio" name="agentType" value="custom" />
+              <div class="radio-content">
+                <span class="radio-main-title">다른 대리인 지정</span>
+                <span class="radio-sub-info">— 가족 등 직접 지정한 대리인 정보로 생성</span>
+              </div>
+            </label>
+          </div>
+
+          <!-- 모다부동산법원경매 대표 정보 카드 (기본 표시) -->
+          <div class="agent-info-card" id="modaAgentCard">
+            <div class="agent-info-grid">
+              <div class="agent-info-item">
+                <span class="agent-item-label">성명</span>
+                <span class="agent-item-val">박지은</span>
+              </div>
+              <div class="agent-info-item">
+                <span class="agent-item-label">본인과의 관계</span>
+                <span class="agent-item-val">매수신청대리인</span>
+              </div>
+              <div class="agent-info-item">
+                <span class="agent-item-label">자격</span>
+                <span class="agent-item-val">수원지방법원 정식등록 공인중개사</span>
+              </div>
+              <div class="agent-info-item">
+                <span class="agent-item-label">전화번호</span>
+                <span class="agent-item-val">010-7308-8284</span>
+              </div>
+              <div class="agent-info-item full-width">
+                <span class="agent-item-label">사무소 주소</span>
+                <span class="agent-item-val">경기도 시흥시 시청로 25, 3층 341호 (장현동, 모다부동산법원경매)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 직접 지정 대리인 입력란 (다른 대리인 지정 시 표시) -->
+          <div id="customAgentFields" style="display: none; margin-top: 18px; padding-top: 18px; border-top: 1px dashed var(--border-light);">
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" for="customAgentName">대리인 성명 <span class="req">*</span></label>
+                <input type="text" id="customAgentName" class="form-control" placeholder="대리인 성명 입력" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="customAgentRelation">본인과의 관계 <span class="req">*</span></label>
+                <input type="text" id="customAgentRelation" class="form-control" placeholder="예: 배우자, 자녀, 직원" />
+              </div>
+            </div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" for="customAgentRrn">주민등록번호 <span class="req">*</span></label>
+                <input type="text" id="customAgentRrn" class="form-control" placeholder="예: 800101-1234567" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="customAgentPhone">전화번호 <span class="req">*</span></label>
+                <input type="tel" id="customAgentPhone" class="form-control" placeholder="예: 010-1234-5678" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="customAgentAddress">대리인 주소 <span class="req">*</span></label>
+              <input type="text" id="customAgentAddress" class="form-control" placeholder="주민등록상 주소 입력" />
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. 사건 정보 카드 -->
+        <div class="form-card">
+          <h2 class="form-card-title">
+            <i class="fa-solid fa-gavel" style="color: var(--accent-gold);"></i>
+            사건 정보
+          </h2>
+          <p class="form-card-desc">법원을 선택하고 사건번호 및 매각기일을 입력해 주세요.</p>
+
+          <div class="form-group">
+            <label class="form-label" for="courtName">법원명 <span class="req">*</span></label>
+            <select id="courtName" class="form-control form-select" required>
+              <option value="">법원을 선택하세요</option>
+              <optgroup label="수원지방법원 관할 (경기 남부)">
+                <option value="수원지방법원 안산지원" selected>수원지방법원 안산지원 (시흥·안산 관할)</option>
+                <option value="수원지방법원 본원">수원지방법원 본원</option>
+                <option value="수원지방법원 안양지원">수원지방법원 안양지원</option>
+                <option value="수원지방법원 평택지원">수원지방법원 평택지원</option>
+                <option value="수원지방법원 성남지원">수원지방법원 성남지원</option>
+                <option value="수원지방법원 여주지원">수원지방법원 여주지원</option>
+              </optgroup>
+              <optgroup label="인천지방법원 관할 (인천·부천)">
+                <option value="인천지방법원 본원">인천지방법원 본원</option>
+                <option value="인천지방법원 부천지원">인천지방법원 부천지원</option>
+              </optgroup>
+              <optgroup label="서울 관할">
+                <option value="서울중앙지방법원">서울중앙지방법원</option>
+                <option value="서울동부지방법원">서울동부지방법원</option>
+                <option value="서울서부지방법원">서울서부지방법원</option>
+                <option value="서울남부지방법원">서울남부지방법원</option>
+                <option value="서울북부지방법원">서울북부지방법원</option>
+              </optgroup>
+              <optgroup label="의정부지방법원 관할 (경기 북부)">
+                <option value="의정부지방법원 본원">의정부지방법원 본원</option>
+                <option value="의정부지방법원 고양지원">의정부지방법원 고양지원</option>
+                <option value="의정부지방법원 남양주지원">의정부지방법원 남양주지원</option>
+              </optgroup>
+              <optgroup label="기타 전국 지방법원">
+                <option value="대전지방법원">대전지방법원 본원/지원</option>
+                <option value="청주지방법원">청주지방법원 본원/지원</option>
+                <option value="대구지방법원">대구지방법원 본원/지원</option>
+                <option value="부산지방법원">부산지방법원 본원/동부/서부</option>
+                <option value="울산지방법원">울산지방법원</option>
+                <option value="창원지방법원">창원지방법원 본원/지원</option>
+                <option value="광주지방법원">광주지방법원 본원/지원</option>
+                <option value="전주지방법원">전주지방법원 본원/지원</option>
+                <option value="춘천지방법원">춘천지방법원 본원/지원</option>
+                <option value="제주지방법원">제주지방법원</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="caseNum">사건번호 <span class="req">*</span></label>
+            <div class="case-number-row">
+              <select id="caseYear" class="form-control form-select case-year-select">
+                <option value="2026" selected>2026</option>
+                <option value="2025">2025</option>
+                <option value="2024">2024</option>
+                <option value="2023">2023</option>
+              </select>
+              <span class="case-badge">타경</span>
+              <input type="text" id="caseNum" class="form-control case-input" placeholder="사건번호 (예: 12345)" required />
+              <button type="button" class="btn-case-search" id="btnCaseSearch">
+                <i class="fa-solid fa-magnifying-glass"></i> 정보조회
+              </button>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="bidDate">입찰기일 <span class="req">*</span></label>
+              <input type="date" id="bidDate" class="form-control" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="itemNum">물건번호</label>
+              <input type="text" id="itemNum" class="form-control" value="1" placeholder="1" />
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. 본인 (입찰자) 정보 카드 -->
+        <div class="form-card">
+          <h2 class="form-card-title">
+            <i class="fa-solid fa-id-card" style="color: var(--accent-gold);"></i>
+            본인 (입찰자) 정보
+          </h2>
+          <p class="form-card-desc">입찰자 명의를 선택하고 인적사항을 정확히 입력해 주세요.</p>
+
+          <!-- 개인 / 법인 전환 탭 -->
+          <div class="bidder-type-tabs">
+            <button type="button" class="bidder-type-btn active" data-type="personal">개인 명의</button>
+            <button type="button" class="bidder-type-btn" data-type="corporate">법인 명의</button>
+          </div>
+
+          <!-- 개인 명의 필드 -->
+          <div id="personalBidderFields">
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" for="bidderName">성명 <span class="req">*</span></label>
+                <input type="text" id="bidderName" class="form-control" placeholder="홍길동" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="bidderPhone">전화번호 <span class="req">*</span></label>
+                <input type="tel" id="bidderPhone" class="form-control" placeholder="010-1234-5678" required />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">주민등록번호 (주민/외국인) <span class="req">*</span></label>
+              <div class="rrn-row">
+                <input type="text" id="bidderRrnFront" class="form-control rrn-input" maxlength="6" placeholder="앞 6자리" required />
+                <span class="rrn-dash">-</span>
+                <input type="password" id="bidderRrnBack" class="form-control rrn-input" maxlength="7" placeholder="뒤 7자리" required />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">주소 <span class="req">*</span></label>
+              <div class="address-row-1">
+                <input type="text" id="bidderPostcode" class="form-control" placeholder="우편번호" style="width: 140px;" readonly />
+                <button type="button" class="btn-postcode-search" id="btnPostcodeSearch">
+                  <i class="fa-solid fa-map-location-dot"></i> 우편번호 검색
+                </button>
+              </div>
+              <div class="address-row-2">
+                <input type="text" id="bidderAddress" class="form-control" placeholder="기본주소 (우편번호 검색 시 자동 입력)" readonly required />
+              </div>
+              <div>
+                <input type="text" id="bidderAddressDetail" class="form-control" placeholder="상세주소 입력 (예: 101동 1203호)" />
+              </div>
+            </div>
+          </div>
+
+          <!-- 법인 명의 필드 (전환 시 표시) -->
+          <div id="corporateBidderFields" style="display: none;">
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" for="corpName">법인명 (상호) <span class="req">*</span></label>
+                <input type="text" id="corpName" class="form-control" placeholder="주식회사 모다경매" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="corpRegNum">법인등록번호 <span class="req">*</span></label>
+                <input type="text" id="corpRegNum" class="form-control" placeholder="예: 123456-1234567" />
+              </div>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" for="corpRepName">대표자 성명 <span class="req">*</span></label>
+                <input type="text" id="corpRepName" class="form-control" placeholder="대표자 성명" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="corpPhone">대표 연락처 <span class="req">*</span></label>
+                <input type="tel" id="corpPhone" class="form-control" placeholder="010-0000-0000" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">법인 본점 주소 <span class="req">*</span></label>
+              <div class="address-row-1">
+                <input type="text" id="corpPostcode" class="form-control" placeholder="우편번호" style="width: 140px;" readonly />
+                <button type="button" class="btn-postcode-search" id="btnPostcodeCorp">
+                  <i class="fa-solid fa-map-location-dot"></i> 우편번호 검색
+                </button>
+              </div>
+              <div class="address-row-2">
+                <input type="text" id="corpAddress" class="form-control" placeholder="법인 기본주소" readonly />
+              </div>
+              <div>
+                <input type="text" id="corpAddressDetail" class="form-control" placeholder="상세주소 (호실, 층수 등)" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. 입찰 금액 카드 -->
+        <div class="form-card">
+          <h2 class="form-card-title">
+            <i class="fa-solid fa-won-sign" style="color: var(--accent-gold);"></i>
+            입찰 금액
+          </h2>
+          <p class="form-card-desc">비워두면 금액란이 공란으로 출력됩니다.</p>
+
+          <!-- 우편 제출용 안내 박스 (체크박스) -->
+          <div class="blank-price-box">
+            <label class="blank-price-label">
+              <input type="checkbox" id="blankPriceCheck" checked />
+              <div>
+                <div class="blank-price-title">우편 제출용 — 입찰가격란을 공란으로 출력</div>
+                <div class="blank-price-desc">
+                  대리입찰 서류를 우편(빠른등기)으로 보내실 때 반드시 선택하세요. 입찰가격은 입찰 당일 최종 확정한 금액을 대리인이 직접 기재합니다(금액을 고쳐 쓴 입찰표는 무효). 보증금액은 아래에 입력하시면 출력됩니다(비워두면 공란). 출력하신 입찰표·위임장의 본인란에는 인감도장을 날인(인감증명서 양식)하거나 본인이 서명(전자본인서명확인서·본인서명사실확인서 양식)해 주세요.
+                </div>
+              </div>
+            </label>
+          </div>
+
+          <div class="form-grid-2">
+            <!-- 입찰가격 -->
+            <div class="form-group">
+              <label class="form-label" for="bidPrice">입찰가격 (원)</label>
+              <input type="text" id="bidPrice" class="form-control" placeholder="우편 제출용 (입찰 당일 대리인이 직접 기재)" disabled />
+              <div class="price-korean-text" id="bidPriceKorean">※ 우편 제출용으로 선택되어 입찰가격란은 공란으로 인쇄됩니다.</div>
+            </div>
+
+            <!-- 보증금액 -->
+            <div class="form-group">
+              <label class="form-label" for="depositPrice">보증금액 (원) <span class="req">*</span></label>
+              <input type="text" id="depositPrice" class="form-control" placeholder="예: 10,640,000" />
+              <div class="price-korean-text" id="depositPriceKorean"></div>
+            </div>
+          </div>
+
+          <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; margin-top: 10px;">
+            정보조회 시 이번 기일 최저매각가격의 10%가 기본으로 입력됩니다(재매각 등 특별매각조건이 공고된 물건은 20%~30%). 다르면 직접 고쳐 주세요.<br />
+            <span style="color: #c5221f; font-weight: 700;">※ 보증금액은 반드시 대법원 법원경매정보 사이트에서 재확인하세요.</span>
+          </p>
+        </div>
+
+        <!-- 5. 동의 및 버튼 카드 -->
+        <div class="form-card" style="text-align: center;">
+          <div class="agreement-box" style="justify-content: center;">
+            <input type="checkbox" id="agreePrivacy" required checked />
+            <label for="agreePrivacy" style="cursor: pointer;">
+              개인정보 수집 및 이용에 동의합니다. (입력하신 정보는 서버에 저장되지 않으며, 사용자 PC 브라우저에서 입찰표 문서 생성에만 안전하게 사용됩니다.)
+            </label>
+          </div>
+
+          <button type="submit" class="btn-generate-pdf">
+            <i class="fa-solid fa-file-pdf"></i>
+            <span>PDF 생성 및 인쇄하기 (기일입찰표 + 위임장)</span>
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </main>
+
+<div id="courtPrintArea">
+
+    <!-- [1페이지] 기일입찰표 (부동산) -->
+    <div class="court-sheet">
+      <div class="court-title-box">
+        <h1>기 일 입 찰 표</h1>
+        <p>(부동산용)</p>
+      </div>
+
+      <div class="court-meta-row">
+        <div><strong>입찰기일:</strong> <span class="court-val" id="pBidDate">2026년 00월 00일</span></div>
+        <div><strong>법원명:</strong> <span class="court-val" id="pCourtName">수원지방법원 안산지원</span></div>
+      </div>
+
+      <table class="court-table">
+        <colgroup>
+          <col style="width: 14%;" />
+          <col style="width: 36%;" />
+          <col style="width: 14%;" />
+          <col style="width: 36%;" />
+        </colgroup>
+        <tbody>
+          <tr>
+            <th>사건번호</th>
+            <td colspan="3">
+              <span class="court-val" id="pCaseNumber" style="font-size: 11pt; font-weight: 800;">2026 타경 00000</span>
+              &nbsp;&nbsp;&nbsp;&nbsp;
+              <strong>물건번호:</strong> <span class="court-val" id="pItemNumber">1</span>
+            </td>
+          </tr>
+          <!-- 입찰자 (본인) 정보 -->
+          <tr>
+            <th rowspan="3">입 찰 자<br />(본 인)</th>
+            <th>성 명</th>
+            <td>
+              <span class="court-val" id="pBidderName" style="font-weight: 700;">홍길동</span>
+              <span style="float: right; color: #777;">(인)</span>
+            </td>
+            <th>주민등록번호</th>
+            <td><span class="court-val" id="pBidderRrn">800101 - 1234567</span></td>
+          </tr>
+          <tr>
+            <th>전화번호</th>
+            <td colspan="3"><span class="court-val" id="pBidderPhone">010-1234-5678</span></td>
+          </tr>
+          <tr>
+            <th>주 소</th>
+            <td colspan="3"><span class="court-val" id="pBidderAddr">경기도 시흥시 시청로 25</span></td>
+          </tr>
+
+          <!-- 대리인 정보 -->
+          <tr>
+            <th rowspan="3">대 리 인</th>
+            <th>성 명</th>
+            <td>
+              <span class="court-val" id="pAgentName">박지은</span>
+              <span style="float: right; color: #777;">(인)</span>
+            </td>
+            <th>본인과의 관계</th>
+            <td><span class="court-val" id="pAgentRelation">매수신청대리인</span></td>
+          </tr>
+          <tr>
+            <th>주민등록번호</th>
+            <td><span class="court-val" id="pAgentRrn">공인중개사 정식등록</span></td>
+            <th>전화번호</th>
+            <td><span class="court-val" id="pAgentPhone">010-7308-8284</span></td>
+          </tr>
+          <tr>
+            <th>주 소</th>
+            <td colspan="3"><span class="court-val" id="pAgentAddr">경기도 시흥시 시청로 25, 3층 341호 (모다부동산법원경매)</span></td>
+          </tr>
+
+          <!-- 입찰 가격 -->
+          <tr>
+            <th style="height: 48px;">입찰가격</th>
+            <td colspan="3" style="font-size: 11pt;">
+              <span class="court-val" id="pBidPriceNum" style="font-weight: 800; font-size: 13pt;"></span>
+              &nbsp;&nbsp;
+              <span class="court-val" id="pBidPriceKor" style="font-size: 10pt; color: #333;"></span>
+            </td>
+          </tr>
+
+          <!-- 보증 금액 -->
+          <tr>
+            <th style="height: 44px;">보증금액</th>
+            <td colspan="3" style="font-size: 11pt;">
+              <span class="court-val" id="pDepositPriceNum" style="font-weight: 800; font-size: 12pt;"></span>
+              &nbsp;&nbsp;
+              <span class="court-val" id="pDepositPriceKor" style="font-size: 10pt; color: #333;"></span>
+            </td>
+          </tr>
+
+          <!-- 보증의 제공방법 -->
+          <tr>
+            <th>보증의 제공방법</th>
+            <td colspan="3">
+              [ v ] 현금 · 자기앞수표 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ &nbsp; ] 입찰보증서
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- 보증물 반환 영수증란 -->
+      <div style="border: 1px solid #000; padding: 12px 14px; margin-top: 14px;">
+        <div style="text-align: center; font-weight: 800; font-size: 11pt; margin-bottom: 8px;">매수신청보증 반환영수증</div>
+        <p style="font-size: 8.5pt; line-height: 1.6; margin-bottom: 10px;">
+          위 사건의 매각기일에 입찰하였으나 낙찰(최고가매수신고인 결정)되지 아니하였으므로, 제출하였던 매수신청보증금을 그 자리에서 정히 영수하여 반환받았습니다.
+        </p>
+        <div style="display: flex; justify-content: flex-end; gap: 30px; font-size: 9.5pt; margin-top: 12px;">
+          <div>입찰자 (대리인): &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (서명 또는 날인)</div>
+        </div>
+      </div>
+
+      <div class="court-notice-box" style="margin-top: 14px;">
+        <strong>[입찰표 작성 시 주의사항]</strong><br />
+        1. 입찰가격을 수정한 입찰표는 무효로 처리되므로 금액을 정정할 수 없습니다. 고쳐 쓸 경우 새 용지를 사용하십시오.<br />
+        2. 입찰보증금은 최저매각가격의 10%(재매각 사건 등 특별매각조건은 그에 정한 비율) 이상이어야 하며, 부족한 경우 입찰은 무효입니다.<br />
+        3. 대리인이 입찰할 때에는 반드시 대리권 수여를 증명하는 위임장 및 인감증명서(또는 본인서명사실확인서)를 첨부하여야 합니다.
+      </div>
+    </div>
+
+    <!-- [2페이지] 위임장 (대리입찰 전용) -->
+    <div class="court-sheet" id="courtSheetPoa">
+      <div class="court-title-box">
+        <h1>위 &nbsp;&nbsp; 임 &nbsp;&nbsp; 장</h1>
+        <p>(부동산경매 대리입찰 위임용)</p>
+      </div>
+
+      <div style="margin-bottom: 14px; font-size: 11pt; font-weight: 700;">
+        사건번호: <span class="court-val" id="poaCaseNumber" style="font-size: 12pt; color: #000;">2026 타경 00000</span>
+      </div>
+
+      <!-- 수임인 (대리인) -->
+      <table class="court-table" style="margin-bottom: 20px;">
+        <colgroup>
+          <col style="width: 16%;" />
+          <col style="width: 34%;" />
+          <col style="width: 16%;" />
+          <col style="width: 34%;" />
+        </colgroup>
+        <tbody>
+          <tr>
+            <th colspan="4" style="background: #e6e6e6; font-size: 10pt;">대 리 인 (수 임 인)</th>
+          </tr>
+          <tr>
+            <th>성 명</th>
+            <td><span class="court-val" id="poaAgentName" style="font-weight: 700;">박지은</span></td>
+            <th>본인과의 관계</th>
+            <td><span class="court-val" id="poaAgentRelation">매수신청대리인</span></td>
+          </tr>
+          <tr>
+            <th>주민등록번호</th>
+            <td><span class="court-val" id="poaAgentRrn">공인중개사 정식등록</span></td>
+            <th>전화번호</th>
+            <td><span class="court-val" id="poaAgentPhone">010-7308-8284</span></td>
+          </tr>
+          <tr>
+            <th>주 소</th>
+            <td colspan="3"><span class="court-val" id="poaAgentAddr">경기도 시흥시 시청로 25, 3층 341호 (모다부동산법원경매)</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- 위임 사항 -->
+      <div style="border: 1px solid #000; padding: 16px 20px; margin-bottom: 24px; line-height: 1.8; font-size: 10pt;">
+        <div style="font-weight: 800; text-align: center; margin-bottom: 8px; font-size: 11pt;">[ 위 임 사 항 ]</div>
+        위 대리인에게 위 사건에 관한 다음 각 호의 권한 일체를 위임합니다.<br />
+        1. 위 사건의 매각기일에 출석하여 기일입찰표를 작성하고 제출하는 행위<br />
+        2. 입찰보증금을 제공하고, 패찰(유찰) 시 그 자리에서 매수신청보증금을 반환 영수하는 행위<br />
+        3. 차순위매수신고 및 그에 관한 보증금 제공 및 반환 영수 행위<br />
+        4. 기타 위 사건의 기일입찰 절차에 부수되는 일체의 권한
+      </div>
+
+      <!-- 위임인 (본인) -->
+      <div style="border: 2px solid #000; padding: 20px; font-size: 10pt; line-height: 2;">
+        <div style="font-weight: 800; font-size: 11pt; margin-bottom: 8px; text-align: center;">위 임 인 (본 인)</div>
+        <div style="display: flex; margin-bottom: 4px;">
+          <div style="width: 100px; font-weight: 700;">성 &nbsp;&nbsp;&nbsp;&nbsp; 명:</div>
+          <div><span class="court-val" id="poaBidderName" style="font-weight: 800; font-size: 12pt;">홍길동</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (인감날인 또는 자필서명)</div>
+        </div>
+        <div style="display: flex; margin-bottom: 4px;">
+          <div style="width: 100px; font-weight: 700;">주민등록번호:</div>
+          <div><span class="court-val" id="poaBidderRrn">800101-1234567</span></div>
+        </div>
+        <div style="display: flex;">
+          <div style="width: 100px; font-weight: 700;">주 &nbsp;&nbsp;&nbsp;&nbsp; 소:</div>
+          <div><span class="court-val" id="poaBidderAddr">경기도 시흥시 시청로 25</span></div>
+        </div>
+      </div>
+
+      <div style="margin-top: 30px; text-align: center; font-size: 10pt;">
+        <strong>대한민국 법원 귀중</strong>
+      </div>
+    </div>
+
+  </div>
+
+  
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3>모다부동산법원경매 공인중개사사무소</h3>
+        <p>경기도 시흥시 시청로 25, 3층 341호 (장현동, 시티프론트 561 The Five)</p>
+        <p>대표: 박지은 (대표 공인중개사)</p>
+        <div class="footer-contact">
+          <a href="tel:01073088284">010-7308-8284</a>
+          <a href="tel:0313138284">031-313-8284</a>
+          <a href="mailto:hi.modahome@gmail.com">hi.modahome@gmail.com</a>
+        </div>
+      </div>
+      <div class="footer">
+        <h4 class="footer-title">등록 정보</h4>
+        <ul class="footer-list">
+          <li>사업자등록번호: 405-11-44704</li>
+          <li>공인중개사 개설등록번호: 41390-2026-00057</li>
+          <li>매수신청대리 등록번호: 수원지방법원 08-26-70</li>
+          <li>공제 및 보증보험 가입</li>
+        </ul>
+      </div>
+      <div class="footer">
+        <h4 class="footer-title">바로가기</h4>
+        <ul class="footer-list">
+          <li><a href="/auction">대리입찰 안내</a></li>
+          <li><a href="/auction/apply">대리입찰 신청</a></li>
+          <li><a href="/auction/bid-pdf">입찰표 생성</a></li>
+          <li><a href="/auction/process">진행 절차</a></li>
+          <li><a href="/about">사무소 소개</a></li>
+          <li><a href="/contact">상담 문의</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-disclaimer">면책: 단순 대리입찰은 의뢰인이 결정한 입찰가를 대신 제출하는 서비스이며, 입찰가·권리분석 책임은 의뢰인에게 있고, 낙찰·패찰 결과와 무관하게 수수료는 동일 적용됩니다.</p>
+      <p class="footer-copy">© 2026 모다부동산법원경매 공인중개사사무소. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<a class="kakao-float" href="https://pf.kakao.com/_ZgCJX/chat" target="_blank" rel="noopener">⚖️ 경매상담 카톡문의</a>
+
+<script src="/bid-form.js"></script>
+</body>
+</html>
