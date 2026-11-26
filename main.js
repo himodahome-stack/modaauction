@@ -55,6 +55,13 @@ document.addEventListener('DOMContentLoaded', function () {
     return el ? String(el.value || '').trim() : '';
   }
 
+  /* 입찰자 주소 — 기본주소(우편번호) + 상세주소(동·호수) */
+  function fullBidderAddress() {
+    var base = (val('bidderZonecode') ? '(' + val('bidderZonecode') + ') ' : '') + val('bidderAddress');
+    var detail = val('bidderAddressDetail');
+    return detail ? (base ? base + ' ' : '') + detail : base;
+  }
+
   function setResult(state, title, desc) {
     resultState = state;
     if (!resultBox) return;
@@ -101,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
       '입찰자 구분': bidderType,
       '입찰자 이름': val('bidderName'),
       '입찰자 연락처': val('bidderPhone'),
-      '입찰자 주소': (val('bidderZonecode') ? '(' + val('bidderZonecode') + ') ' : '') + val('bidderAddress'),
+      '입찰자 주소': fullBidderAddress(),
       '보증 금액': val('depositAmount') + '원',
       '입찰 금액': val('bidAmount') + '원',
       '보증금 반환 은행': val('bankName'),
@@ -201,9 +208,11 @@ document.addEventListener('DOMContentLoaded', function () {
           if (extra) addr += ' (' + extra + ')';
           var addrInput = document.getElementById('bidderAddress');
           var zoneInput = document.getElementById('bidderZonecode');
+          var detailInput = document.getElementById('bidderAddressDetail');
           if (addrInput) addrInput.value = addr;
           if (zoneInput) zoneInput.value = data.zonecode || '';
-          addrInput.focus();
+          if (detailInput) detailInput.focus();
+          else if (addrInput) addrInput.focus();
         }
       }).open();
     });
@@ -307,7 +316,7 @@ document.addEventListener('DOMContentLoaded', function () {
       '· 의뢰인: ' + val('clientName') + ' / ' + val('clientPhone') + ' / ' + val('clientEmail'),
       '· 입찰자 구분: ' + bidderType,
       '· 입찰자: ' + val('bidderName'),
-      '· 입찰자 주소: ' + (val('bidderZonecode') ? '(' + val('bidderZonecode') + ') ' : '') + val('bidderAddress'),
+      '· 입찰자 주소: ' + fullBidderAddress(),
       '· 보증 금액: ' + val('depositAmount') + '원',
       '· 입찰 금액: ' + val('bidAmount') + '원',
       '',
