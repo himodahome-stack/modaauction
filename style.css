@@ -419,6 +419,37 @@ section[id] { scroll-margin-top: calc(var(--header-height) + 16px); }
 .price-card .price-value { color: var(--gold-deep); font-size: 26px; font-weight: 800; letter-spacing: -0.03em; }
 .price-note { margin: 0 0 22px; color: var(--text-muted); font-size: 13.5px; line-height: 1.7; }
 
+/* Multi-case fee (같은 날 같은 법원 2건 이상) */
+.multi-fee {
+  margin: 0 0 18px;
+  padding: 16px 20px 12px;
+  background: var(--gold-tint);
+  border: 1px solid #E6DCC6;
+  border-radius: var(--radius-md);
+}
+.multi-fee-title {
+  margin: 0 0 4px;
+  color: var(--gold-deep);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.multi-fee-list { margin: 0; }
+.multi-fee-list li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 7px 0;
+  border-top: 1px solid #E3D8C0;
+  color: var(--ink);
+  font-size: 14px;
+}
+.multi-fee-list li:first-child { border-top: 0; }
+.multi-fee-list strong { color: var(--gold-deep); font-size: 15.5px; font-weight: 800; }
+.multi-fee-note { margin: 6px 0 0; color: var(--text-muted); font-size: 12.5px; line-height: 1.6; }
+.multi-fee .multi-fee-note { margin-bottom: 0; }
+
 .quote-card {
   padding: 26px 26px 18px;
   background: #fff;
