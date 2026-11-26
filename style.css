@@ -1057,6 +1057,21 @@ section[id] { scroll-margin-top: calc(var(--header-height) + 16px); }
 .result-actions { display: flex; gap: 10px; flex-wrap: wrap; }
 .result-actions .btn { padding: 12px 20px; font-size: 15px; }
 
+/* 신청 결과 패널 상태 (발송 중 / 접수 완료 / 자동 전송 실패) */
+.apply-result { border-color: #BFD0C4; background: #F2F6F1; }
+.apply-result.is-sending { border-color: #D8CDB4; background: #F8F5EC; }
+.apply-result.is-success { border-color: #A9C6B0; background: #EFF7F0; }
+.apply-result.is-fallback { border-color: #E0C79A; background: #FBF4E6; }
+.apply-result h2:focus { outline: none; }
+.apply-result-summary { margin-top: 18px; border-top: 1px solid #DDE4DA; padding-top: 14px; }
+.apply-result-summary summary { cursor: pointer; font-size: 14px; font-weight: 600; color: var(--gold-deep); }
+.apply-result-summary .summary-box { margin-bottom: 0; }
+
+/* 스팸 방지용 허니팟 필드 (화면에서 감춤) */
+.hp-field { position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+
+[hidden] { display: none !important; }
+
 /* ---------- About ---------- */
 .about-intro { max-width: 900px; margin-bottom: 40px; }
 .about-intro p { font-size: 16.5px; line-height: 1.85; }

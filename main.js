@@ -35,14 +35,129 @@ document.addEventListener('DOMContentLoaded', function () {
 
   var errorBox = document.getElementById('formError');
   var resultBox = document.getElementById('applyResult');
+  var resultTitle = document.getElementById('applyResultTitle');
+  var resultDesc = document.getElementById('applyResultDesc');
   var summaryBox = document.getElementById('summaryText');
   var mailLink = document.getElementById('mailtoLink');
   var copyBtn = document.getElementById('copySummaryBtn');
   var copyMsg = document.getElementById('copyMessage');
+  var submitBtn = form.querySelector('button[type="submit"]');
+
+  /* 신청서를 사무소 메일로 바로 발송하는 폼 전송 서비스 (FormSubmit)
+   * - 사무소 메일함에서 최초 1회 활성화 링크를 누르면 이후 자동 발송됩니다.
+   * - 발송이 실패하면 이메일 보내기·카톡·전화 안내로 넘어가 신청이 사라지지 않습니다. */
+  var FORM_ENDPOINT = 'https://formsubmit.co/ajax/hi.modahome@gmail.com';
+  var OFFICE_MAIL = 'hi.modahome@gmail.com';
+  var resultState = '';
 
   function val(id) {
     var el = document.getElementById(id);
     return el ? String(el.value || '').trim() : '';
+  }
+
+  function setResult(state, title, desc) {
+    resultState = state;
+    if (!resultBox) return;
+    resultBox.classList.remove('is-sending', 'is-success', 'is-fallback');
+    resultBox.classList.add('is-' + state);
+    if (resultTitle) resultTitle.textContent = title;
+    if (resultDesc) resultDesc.textContent = desc;
+    if (mailLink) {
+      if (state === 'fallback') { mailLink.removeAttribute('hidden'); }
+      else { mailLink.setAttribute('hidden', ''); }
+    }
+  }
+
+  function setBusy(busy) {
+    if (!submitBtn) return;
+    if (busy) {
+      if (!submitBtn.dataset.label) submitBtn.dataset.label = submitBtn.textContent.trim();
+      submitBtn.textContent = '보내는 중…';
+      submitBtn.disabled = true;
+      submitBtn.setAttribute('aria-busy', 'true');
+    } else {
+      if (submitBtn.dataset.label) submitBtn.textContent = submitBtn.dataset.label;
+      submitBtn.disabled = false;
+      submitBtn.removeAttribute('aria-busy');
+    }
+  }
+
+  function buildPayload(subject, text, bidderType) {
+    var caseNo = val('caseYear') + '타경' + val('caseNumber') +
+      (val('itemNumber') ? ' (물건번호 ' + val('itemNumber') + ')' : '');
+    return {
+      _subject: subject,
+      _template: 'table',
+      _captcha: 'false',
+      _replyto: val('clientEmail'),
+      _honey: val('websiteHp'),
+      '법원': val('court'),
+      '사건번호': caseNo,
+      '매각기일': val('bidDate'),
+      '물건 소재지': val('propertyAddress'),
+      '의뢰인 이름': val('clientName'),
+      '의뢰인 연락처': val('clientPhone'),
+      '의뢰인 이메일': val('clientEmail'),
+      '입찰자 구분': bidderType,
+      '입찰자 이름': val('bidderName'),
+      '입찰자 연락처': val('bidderPhone'),
+      '입찰자 주소': (val('bidderZonecode') ? '(' + val('bidderZonecode') + ') ' : '') + val('bidderAddress'),
+      '입찰 금액': val('bidAmount') + '원',
+      '보증 금액': val('depositAmount') + '원',
+      '보증금 반환 은행': val('bankName'),
+      '보증금 반환 계좌': val('accountNumber'),
+      '예금주': val('accountHolder'),
+      '신청서 전문': text
+    };
+  }
+
+  function onSendSuccess() {
+    setBusy(false);
+    setResult(
+      'success',
+      '신청이 접수되었습니다',
+      '적어 주신 내용이 사무소 메일로 전달되었습니다. 확인한 뒤 담당자가 연락드립니다. 매각기일이 임박했다면 아래 전화로 바로 연락 주세요.'
+    );
+    if (resultTitle) resultTitle.focus({ preventScroll: true });
+    if (resultBox) resultBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function onSendFailure() {
+    setBusy(false);
+    setResult(
+      'fallback',
+      '자동 전송이 되지 않았습니다',
+      '아래 ‘이메일로 보내기’를 눌러 보내 주시거나, 전화·카톡으로 알려 주세요. 작성하신 내용은 그대로 남아 있습니다.'
+    );
+    if (resultTitle) resultTitle.focus({ preventScroll: true });
+    if (resultBox) resultBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function sendApplication(subject, text, bidderType) {
+    var payload = buildPayload(subject, text, bidderType);
+    var controller = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+    var timer = controller ? setTimeout(function () { controller.abort(); }, 20000) : null;
+
+    fetch(FORM_ENDPOINT, {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(payload),
+      signal: controller ? controller.signal : undefined
+    }).then(function (res) {
+      return res.json().then(function (data) { return { ok: res.ok, data: data || {} }; })
+        .catch(function () { return { ok: false, data: {} }; });
+    }).then(function (r) {
+      if (timer) clearTimeout(timer);
+      if (r.ok && String(r.data.success) === 'true') onSendSuccess();
+      else onSendFailure();
+    }).catch(function () {
+      if (timer) clearTimeout(timer);
+      onSendFailure();
+    });
   }
 
   function showError(message) {
@@ -192,13 +307,19 @@ document.addEventListener('DOMContentLoaded', function () {
     ];
     var text = lines.join('\n');
 
-    summaryBox.textContent = text;
-    resultBox.hidden = false;
-    resultBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
     var subject = '[대리입찰 신청] ' + val('court') + ' ' + val('caseYear') + '타경' + val('caseNumber') + ' - ' + val('clientName');
-    mailLink.href = 'mailto:hi.modahome@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(text);
+
+    if (summaryBox) summaryBox.textContent = text;
+    if (mailLink) mailLink.href = 'mailto:' + OFFICE_MAIL + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(text);
     if (copyMsg) copyMsg.textContent = '';
+
+    if (resultBox) {
+      resultBox.hidden = false;
+      setResult('sending', '신청서를 보내는 중입니다', '잠시만 기다려 주세요. 내용이 사무소 메일로 바로 전달됩니다.');
+      resultBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    setBusy(true);
+    sendApplication(subject, text, bidderType);
   });
 
   if (copyBtn) {
@@ -227,8 +348,9 @@ document.addEventListener('DOMContentLoaded', function () {
     document.body.removeChild(ta);
   }
 
-  /* Reset result panel when the form changes again */
-  form.addEventListener('input', function () {
-    if (resultBox && !resultBox.hidden) resultBox.hidden = true;
+  /* Reset result panel when the form changes again (발송 중에는 건드리지 않습니다) */
+  form.addEventListener('input', function (e) {
+    if (e.target && e.target.id === 'websiteHp') return;
+    if (resultBox && !resultBox.hidden && resultState !== 'sending') resultBox.hidden = true;
   });
 });

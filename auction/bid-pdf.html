@@ -375,18 +375,18 @@
           </div>
 
           <div class="form-grid-2">
+            <!-- 보증금액 (기일입찰표 순서대로 먼저) -->
+            <div class="form-group">
+              <label class="form-label" for="depositPrice">보증금액 (원) <span class="req">*</span></label>
+              <input type="text" id="depositPrice" class="form-control" placeholder="예: 10,640,000" />
+              <div class="price-korean-text" id="depositPriceKorean"></div>
+            </div>
+
             <!-- 입찰가격 -->
             <div class="form-group">
               <label class="form-label" for="bidPrice">입찰가격 (원)</label>
               <input type="text" id="bidPrice" class="form-control" placeholder="우편 제출용 (입찰 당일 대리인이 직접 기재)" disabled />
               <div class="price-korean-text" id="bidPriceKorean">※ 우편 제출용으로 선택되어 입찰가격란은 공란으로 인쇄됩니다.</div>
-            </div>
-
-            <!-- 보증금액 -->
-            <div class="form-group">
-              <label class="form-label" for="depositPrice">보증금액 (원) <span class="req">*</span></label>
-              <input type="text" id="depositPrice" class="form-control" placeholder="예: 10,640,000" />
-              <div class="price-korean-text" id="depositPriceKorean"></div>
             </div>
           </div>
 
@@ -488,13 +488,11 @@
             <td colspan="3"><span class="court-val" id="pAgentAddr">경기도 시흥시 시청로 25, 3층 341호 (모다부동산법원경매)</span></td>
           </tr>
 
-          <!-- 입찰 가격 -->
+          <!-- 보증의 제공방법 (실물 기일입찰표 순서: 제공방법 → 보증금액 → 입찰가격) -->
           <tr>
-            <th style="height: 48px;">입찰가격</th>
-            <td colspan="3" style="font-size: 11pt;">
-              <span class="court-val" id="pBidPriceNum" style="font-weight: 800; font-size: 13pt;"></span>
-              &nbsp;&nbsp;
-              <span class="court-val" id="pBidPriceKor" style="font-size: 10pt; color: #333;"></span>
+            <th>보증의 제공방법</th>
+            <td colspan="3">
+              [ v ] 현금 · 자기앞수표 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ &nbsp; ] 보증서
             </td>
           </tr>
 
@@ -508,11 +506,13 @@
             </td>
           </tr>
 
-          <!-- 보증의 제공방법 -->
+          <!-- 입찰 가격 -->
           <tr>
-            <th>보증의 제공방법</th>
-            <td colspan="3">
-              [ v ] 현금 · 자기앞수표 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ &nbsp; ] 입찰보증서
+            <th style="height: 48px;">입찰가격</th>
+            <td colspan="3" style="font-size: 11pt;">
+              <span class="court-val" id="pBidPriceNum" style="font-weight: 800; font-size: 13pt;"></span>
+              &nbsp;&nbsp;
+              <span class="court-val" id="pBidPriceKor" style="font-size: 10pt; color: #333;"></span>
             </td>
           </tr>
         </tbody>
