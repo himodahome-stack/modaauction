@@ -8,39 +8,56 @@
 </head>
 <body>
   <h1>FormSubmit 진단 페이지</h1>
-  <p>아래 버튼을 누르면 formsubmit.co AJAX 엔드포인트로 실제 요청을 보내고 결과를 그대로 표시합니다.</p>
+  <p>JSON(preflight 있음)과 form-urlencoded(preflight 없음) 두 방식을 차례로 보내고 걸린 시간을 표시합니다.</p>
   <button id="go">요청 보내기</button>
   <pre id="out">대기 중</pre>
   <script>
-    document.getElementById('go').addEventListener('click', async function () {
-      var out = document.getElementById('out');
-      out.textContent = '요청 중...';
-      var info = {
-        origin: location.origin,
-        ua: navigator.userAgent,
-        steps: []
-      };
+    var URL_ = 'https://formsubmit.co/ajax/hi.modahome@gmail.com';
+    function now() { return Math.round(performance.now()); }
+    async function tryJson(log) {
+      var t0 = now();
       try {
-        var res = await fetch('https://formsubmit.co/ajax/hi.modahome@gmail.com', {
+        var res = await fetch(URL_, {
           method: 'POST',
           mode: 'cors',
           headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-          body: JSON.stringify({
-            _subject: '[진단] 모다경매 신청 폼 연동 확인',
-            _template: 'table',
-            _captcha: 'false',
-            name: '진단 요청',
-            message: '홈페이지 신청 폼 연동 상태 확인용 요청입니다.'
-          })
+          body: JSON.stringify({ _subject: '[진단] JSON 방식', _template: 'table', _captcha: 'false', name: '진단 JSON', message: 'JSON 방식 시간 측정' })
         });
-        info.steps.push({ step: 'fetch resolved', status: res.status, type: res.type, ok: res.ok });
-        info.headers = {};
-        res.headers.forEach(function (v, k) { info.headers[k] = v; });
-        info.body = (await res.text()).slice(0, 2000);
-      } catch (err) {
-        info.steps.push({ step: 'fetch rejected', name: err && err.name, message: String(err && err.message) });
+        var body = await res.text();
+        log.push({ mode: 'json(preflight)', ms: now() - t0, status: res.status, ok: res.ok, body: body.slice(0, 300) });
+      } catch (e) {
+        log.push({ mode: 'json(preflight)', ms: now() - t0, error: String(e && e.message) });
       }
-      out.textContent = JSON.stringify(info, null, 2);
+    }
+    async function tryForm(log) {
+      var t0 = now();
+      var params = new URLSearchParams();
+      params.append('_subject', '[진단] urlencoded 방식');
+      params.append('_template', 'table');
+      params.append('_captcha', 'false');
+      params.append('name', '진단 urlencoded');
+      params.append('message', 'urlencoded 방식 시간 측정');
+      try {
+        var res = await fetch(URL_, {
+          method: 'POST',
+          mode: 'cors',
+          headers: { 'Accept': 'application/json' },
+          body: params
+        });
+        var body = await res.text();
+        log.push({ mode: 'urlencoded(no preflight)', ms: now() - t0, status: res.status, ok: res.ok, body: body.slice(0, 300) });
+      } catch (e) {
+        log.push({ mode: 'urlencoded(no preflight)', ms: now() - t0, error: String(e && e.message) });
+      }
+    }
+    document.getElementById('go').addEventListener('click', async function () {
+      var out = document.getElementById('out');
+      var log = [];
+      out.textContent = '요청 중...';
+      await tryForm(log);
+      out.textContent = JSON.stringify(log, null, 2);
+      await tryJson(log);
+      out.textContent = JSON.stringify(log, null, 2);
     });
   </script>
 </body>
