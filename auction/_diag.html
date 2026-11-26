@@ -3,61 +3,63 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="robots" content="noindex, nofollow" />
-  <title>FormSubmit 진단</title>
+  <title>폼 전송 서비스 지연 비교</title>
   <style>body{font-family:monospace;padding:20px;line-height:1.5}pre{white-space:pre-wrap;background:#f4f4f4;padding:12px;border:1px solid #ccc}</style>
 </head>
 <body>
-  <h1>FormSubmit 진단 페이지</h1>
-  <p>JSON(preflight 있음)과 form-urlencoded(preflight 없음) 두 방식을 차례로 보내고 걸린 시간을 표시합니다.</p>
-  <button id="go">요청 보내기</button>
+  <h1>폼 전송 서비스 응답시간 비교</h1>
+  <p>각 서비스에 실제 요청을 보내고 걸린 시간을 표시합니다. (web3forms는 키 없이 보내 400이 정상)</p>
+  <button id="go">측정 시작</button>
   <pre id="out">대기 중</pre>
   <script>
-    var URL_ = 'https://formsubmit.co/ajax/hi.modahome@gmail.com';
     function now() { return Math.round(performance.now()); }
-    async function tryJson(log) {
+    async function timed(label, fn, log, out) {
       var t0 = now();
+      var entry = { label: label };
       try {
-        var res = await fetch(URL_, {
-          method: 'POST',
-          mode: 'cors',
-          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-          body: JSON.stringify({ _subject: '[진단] JSON 방식', _template: 'table', _captcha: 'false', name: '진단 JSON', message: 'JSON 방식 시간 측정' })
-        });
-        var body = await res.text();
-        log.push({ mode: 'json(preflight)', ms: now() - t0, status: res.status, ok: res.ok, body: body.slice(0, 300) });
+        var res = await fn();
+        entry.ms = now() - t0;
+        entry.status = res.status;
+        entry.body = (await res.text()).slice(0, 200);
       } catch (e) {
-        log.push({ mode: 'json(preflight)', ms: now() - t0, error: String(e && e.message) });
+        entry.ms = now() - t0;
+        entry.error = String(e && e.message);
       }
-    }
-    async function tryForm(log) {
-      var t0 = now();
-      var params = new URLSearchParams();
-      params.append('_subject', '[진단] urlencoded 방식');
-      params.append('_template', 'table');
-      params.append('_captcha', 'false');
-      params.append('name', '진단 urlencoded');
-      params.append('message', 'urlencoded 방식 시간 측정');
-      try {
-        var res = await fetch(URL_, {
-          method: 'POST',
-          mode: 'cors',
-          headers: { 'Accept': 'application/json' },
-          body: params
-        });
-        var body = await res.text();
-        log.push({ mode: 'urlencoded(no preflight)', ms: now() - t0, status: res.status, ok: res.ok, body: body.slice(0, 300) });
-      } catch (e) {
-        log.push({ mode: 'urlencoded(no preflight)', ms: now() - t0, error: String(e && e.message) });
-      }
+      log.push(entry);
+      out.textContent = JSON.stringify(log, null, 2);
     }
     document.getElementById('go').addEventListener('click', async function () {
       var out = document.getElementById('out');
       var log = [];
-      out.textContent = '요청 중...';
-      await tryForm(log);
-      out.textContent = JSON.stringify(log, null, 2);
-      await tryJson(log);
-      out.textContent = JSON.stringify(log, null, 2);
+      out.textContent = '측정 중...';
+
+      await timed('web3forms api (dummy key)', function () {
+        return fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({ access_key: '00000000-0000-0000-0000-000000000000', name: 'test', message: 'latency test' })
+        });
+      }, log, out);
+
+      await timed('formsubmit.co html (GET)', function () {
+        return fetch('https://formsubmit.co/?latency=1', { method: 'GET' });
+      }, log, out);
+
+      await timed('formsubmit ajax urlencoded', function () {
+        var p = new URLSearchParams();
+        p.append('_subject', '[진단] 지연 측정');
+        p.append('_template', 'table');
+        p.append('_captcha', 'false');
+        p.append('name', '지연 측정');
+        p.append('message', '응답시간 측정용');
+        return fetch('https://formsubmit.co/ajax/hi.modahome@gmail.com', {
+          method: 'POST',
+          headers: { 'Accept': 'application/json' },
+          body: p
+        });
+      }, log, out);
+
+      out.textContent = JSON.stringify(log, null, 2) + '\n\n측정 완료';
     });
   </script>
 </body>
