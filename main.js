@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function () {
   function buildPayload(subject, text, bidderType) {
     var caseNo = val('caseYear') + '타경' + val('caseNumber') +
       (val('itemNumber') ? ' (물건번호 ' + val('itemNumber') + ')' : '');
-    return {
+    var data = {
       _subject: subject,
       _template: 'table',
       _captcha: 'false',
@@ -109,6 +109,9 @@ document.addEventListener('DOMContentLoaded', function () {
       '예금주': val('accountHolder'),
       '신청서 전문': text
     };
+    var params = new URLSearchParams();
+    Object.keys(data).forEach(function (k) { params.append(k, data[k]); });
+    return params;
   }
 
   function onSendSuccess() {
@@ -136,25 +139,35 @@ document.addEventListener('DOMContentLoaded', function () {
   function sendApplication(subject, text, bidderType) {
     var payload = buildPayload(subject, text, bidderType);
     var controller = (typeof AbortController !== 'undefined') ? new AbortController() : null;
-    var timer = controller ? setTimeout(function () { controller.abort(); }, 20000) : null;
+    var slowTimer = setTimeout(function () {
+      setResult(
+        'sending',
+        '전송 중입니다',
+        '메일 발송이 평소보다 오래 걸리고 있습니다(최대 1분). 기다리시는 동안 아래 이메일로 바로 보내셔도 접수됩니다.'
+      );
+      if (mailLink) mailLink.removeAttribute('hidden');
+    }, 12000);
+    var timer = controller ? setTimeout(function () { controller.abort(); }, 60000) : null;
 
     fetch(FORM_ENDPOINT, {
       method: 'POST',
       mode: 'cors',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
         'Accept': 'application/json'
       },
-      body: JSON.stringify(payload),
+      body: payload.toString(),
       signal: controller ? controller.signal : undefined
     }).then(function (res) {
       return res.json().then(function (data) { return { ok: res.ok, data: data || {} }; })
         .catch(function () { return { ok: false, data: {} }; });
     }).then(function (r) {
+      clearTimeout(slowTimer);
       if (timer) clearTimeout(timer);
       if (r.ok && String(r.data.success) === 'true') onSendSuccess();
       else onSendFailure();
     }).catch(function () {
+      clearTimeout(slowTimer);
       if (timer) clearTimeout(timer);
       onSendFailure();
     });
