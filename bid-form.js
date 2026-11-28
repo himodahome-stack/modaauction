@@ -1,12 +1,18 @@
 /**
- * 모다부동산법원경매 공인중개사사무소 - 경매 입찰표 PDF 생성기 스크립트
+ * 모다부동산법원경매 공인중개사사무소 — 경매 입찰표 PDF 생성기
+ * [전산양식 A3360] 기일입찰표 · 위임장 (모든 입력은 브라우저 안에서만 처리)
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Elements
+  // ---------------------------------------------------------------- elements
+  const printModeRadios = document.querySelectorAll('input[name="printMode"]');
   const agentRadios = document.querySelectorAll('input[name="agentType"]');
+  const printArea = document.getElementById('courtPrintArea');
+  const poaSheet = document.getElementById('courtSheetPoa');
+  const agentCard = document.getElementById('agentCard');
   const modaAgentCard = document.getElementById('modaAgentCard');
   const customAgentFields = document.getElementById('customAgentFields');
+  const btnGenerateLabel = document.getElementById('btnGenerateLabel');
 
   const bidderTypeBtns = document.querySelectorAll('.bidder-type-btn');
   const personalFields = document.getElementById('personalBidderFields');
@@ -15,7 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const blankPriceCheck = document.getElementById('blankPriceCheck');
   const bidPriceInput = document.getElementById('bidPrice');
   const bidPriceKorean = document.getElementById('bidPriceKorean');
-
   const depositPriceInput = document.getElementById('depositPrice');
   const depositPriceKorean = document.getElementById('depositPriceKorean');
 
@@ -24,28 +29,66 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnCaseSearch = document.getElementById('btnCaseSearch');
 
   const form = document.getElementById('bidGeneratorForm');
-  const printModal = document.getElementById('printModal');
-  const btnCloseModal = document.getElementById('btnCloseModal');
-  const btnModalPrint = document.getElementById('btnModalPrint');
 
-  // 1. 대리인 선택 라디오 토글
+  const $ = (id) => document.getElementById(id);
+  const setText = (id, value) => {
+    const el = $(id);
+    if (el) el.textContent = value == null ? '' : String(value);
+  };
+
+  // ------------------------------------------------------- 출력 방식 선택
+  function currentPrintMode() {
+    const checked = document.querySelector('input[name="printMode"]:checked');
+    return checked ? checked.value : 'withPoa';
+  }
+
+  function applyPrintMode() {
+    const mode = currentPrintMode();
+    const bidOnly = mode === 'bidOnly';
+
+    // 인쇄 영역: 1쪽만 / 2쪽
+    if (printArea) printArea.classList.toggle('bid-only', bidOnly);
+    if (poaSheet) poaSheet.style.display = bidOnly ? 'none' : '';
+
+    // 대리인 선택 카드는 대리 입찰일 때만
+    if (agentCard) agentCard.style.display = bidOnly ? 'none' : '';
+
+    // 버튼 문구
+    if (btnGenerateLabel) {
+      btnGenerateLabel.textContent = bidOnly
+        ? 'PDF 생성 및 인쇄하기 (기일입찰표만 · 1쪽)'
+        : 'PDF 생성 및 인쇄하기 (기일입찰표 + 위임장 · 2쪽)';
+    }
+
+    // 선택 카드 강조
+    document.querySelectorAll('.print-mode-label').forEach(label => {
+      const input = label.querySelector('input[name="printMode"]');
+      label.classList.toggle('is-active', !!input && input.checked);
+    });
+
+    // 대리인란 비우기/채우기는 인쇄 직전 populate 에서 처리
+    if (bidOnly) clearAgentFields();
+  }
+
+  printModeRadios.forEach(radio => {
+    radio.addEventListener('change', applyPrintMode);
+  });
+
+  // ------------------------------------------------------- 대리인 선택
+  function currentAgentType() {
+    const checked = document.querySelector('input[name="agentType"]:checked');
+    return checked ? checked.value : 'moda';
+  }
+
   agentRadios.forEach(radio => {
     radio.addEventListener('change', () => {
-      const val = radio.value;
-      if (val === 'moda') {
-        modaAgentCard.style.display = 'block';
-        customAgentFields.style.display = 'none';
-      } else if (val === 'self') {
-        modaAgentCard.style.display = 'none';
-        customAgentFields.style.display = 'none';
-      } else if (val === 'custom') {
-        modaAgentCard.style.display = 'none';
-        customAgentFields.style.display = 'block';
-      }
+      const val = currentAgentType();
+      if (modaAgentCard) modaAgentCard.style.display = val === 'moda' ? 'block' : 'none';
+      if (customAgentFields) customAgentFields.style.display = val === 'custom' ? 'block' : 'none';
     });
   });
 
-  // 2. 본인 (입찰자) 개인 / 법인 탭 전환
+  // ------------------------------------------------------- 개인 / 법인 탭
   bidderTypeBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       bidderTypeBtns.forEach(b => b.classList.remove('active'));
@@ -62,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 3. 우편 제출용 - 입찰가격 공란 체크박스
+  // ------------------------------------------------------- 우편 제출용(공란) 체크
   if (blankPriceCheck && bidPriceInput) {
     blankPriceCheck.addEventListener('change', () => {
       if (blankPriceCheck.checked) {
@@ -80,14 +123,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 4. 숫자 천 단위 콤마 포맷터 & 한글 금액 변환 함수
+  // ------------------------------------------------------- 숫자 포맷 · 한글 금액
   function formatNumberWithCommas(val) {
-    const num = val.replace(/[^0-9]/g, '');
+    const num = String(val).replace(/[^0-9]/g, '');
     return num.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
 
   function numberToKorean(numberStr) {
-    const cleanNum = numberStr.replace(/[^0-9]/g, '');
+    const cleanNum = String(numberStr).replace(/[^0-9]/g, '');
     if (!cleanNum || cleanNum === '0') return '';
 
     const num = parseInt(cleanNum, 10);
@@ -110,12 +153,11 @@ document.addEventListener('DOMContentLoaded', () => {
     return `금 ${result.trim()} 원정 (₩${num.toLocaleString('ko-KR')})`;
   }
 
-  // 금액 입력 시 자동 콤마 및 한글 변환
   if (bidPriceInput) {
     bidPriceInput.addEventListener('input', (e) => {
       const formatted = formatNumberWithCommas(e.target.value);
       e.target.value = formatted;
-      bidPriceKorean.textContent = numberToKorean(formatted);
+      bidPriceKorean.textContent = formatted ? numberToKorean(formatted) : '';
     });
   }
 
@@ -127,17 +169,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 5. 다음(카카오) 우편번호 검색 연동
+  // ------------------------------------------------------- 다음(카카오) 우편번호
   function openPostcode(postcodeInputId, addrInputId) {
     if (typeof daum === 'undefined' || !daum.Postcode) {
       alert('우편번호 서비스를 불러오는 중입니다. 잠시 후 다시 시도해 주세요.');
       return;
     }
     new daum.Postcode({
-      oncomplete: function(data) {
+      oncomplete: function (data) {
         let fullAddr = data.roadAddress;
         if (!fullAddr) fullAddr = data.jibunAddress;
-
         document.getElementById(postcodeInputId).value = data.zonecode;
         document.getElementById(addrInputId).value = fullAddr;
       }
@@ -145,205 +186,234 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (btnPostcodeSearch) {
-    btnPostcodeSearch.addEventListener('click', () => {
-      openPostcode('bidderPostcode', 'bidderAddress');
-    });
+    btnPostcodeSearch.addEventListener('click', () => openPostcode('bidderPostcode', 'bidderAddress'));
   }
-
   if (btnPostcodeCorp) {
-    btnPostcodeCorp.addEventListener('click', () => {
-      openPostcode('corpPostcode', 'corpAddress');
-    });
+    btnPostcodeCorp.addEventListener('click', () => openPostcode('corpPostcode', 'corpAddress'));
   }
 
-  // 6. 사건 정보조회 시뮬레이션
+  // ------------------------------------------------------- 사건 정보 확인
   if (btnCaseSearch) {
     btnCaseSearch.addEventListener('click', () => {
-      const court = document.getElementById('courtName').value;
-      const caseNum = document.getElementById('caseNum').value;
+      const court = $('courtName').value;
+      const caseNum = $('caseNum').value;
       if (!court) {
         alert('법원을 먼저 선택해 주세요.');
-        document.getElementById('courtName').focus();
+        $('courtName').focus();
         return;
       }
       if (!caseNum) {
         alert('사건번호를 입력해 주세요.');
-        document.getElementById('caseNum').focus();
+        $('caseNum').focus();
         return;
       }
-
-      // 입력 내용 확인 (실제 사건 조회가 아닙니다)
-      const caseYear = document.getElementById('caseYear') ? document.getElementById('caseYear').value : '';
+      const caseYear = $('caseYear') ? $('caseYear').value : '';
       alert(`[입력 내용 확인]\n${court} ${caseYear}타경 ${caseNum}\n\n이 화면은 입력하신 내용만 보여 드립니다. 실제 입찰기일·최저매각가격·보증금액은 대법원 법원경매정보(courtauction.go.kr)에서 확인해 주세요.`);
     });
   }
 
-  // 7. 법정 양식 HTML 데이터 채우기 (Print DOM Population)
-  function populatePrintSheet() {
-    const courtName = document.getElementById('courtName').value || '수원지방법원 안산지원';
-    const caseYear = document.getElementById('caseYear').value || '2026';
-    const caseNum = document.getElementById('caseNum').value || '';
-    const itemNum = document.getElementById('itemNum').value || '1';
-    const bidDate = document.getElementById('bidDate').value || '';
+  // ------------------------------------------------------- 인쇄 영역 채우기
+  function clearAgentFields() {
+    ['pAgentName', 'pAgentRelation', 'pAgentRrn', 'pAgentPhone', 'pAgentAddr'].forEach(id => setText(id, ''));
+    ['pPoaAgentName', 'pPoaAgentJob', 'pPoaAgentRrn', 'pPoaAgentPhone', 'pPoaAgentAddr'].forEach(id => setText(id, ''));
+  }
 
-    const selectedAgentRadio = document.querySelector('input[name="agentType"]:checked');
-    const agentType = selectedAgentRadio ? selectedAgentRadio.value : 'moda';
+  /**
+   * 금액을 12자리 칸(천억~일)에 오른쪽 정렬로 한 자리씩 넣는다.
+   * 예) 190,000,000 → 억=1, 천만=9, 백만~일=0
+   */
+  function fillDigits(containerId, amount) {
+    const container = $(containerId);
+    if (!container) return 0;
+    const cells = container.querySelectorAll('td.dg');
+    const digits = String(amount || '').replace(/[^0-9]/g, '').replace(/^0+(?=\d)/, '');
+    const arr = new Array(cells.length).fill('');
+    if (digits) {
+      const sliced = digits.slice(-cells.length);
+      for (let i = 0; i < sliced.length; i++) {
+        arr[cells.length - sliced.length + i] = sliced[i];
+      }
+    }
+    cells.forEach((cell, i) => { cell.textContent = arr[i]; });
+    return digits.length;
+  }
 
+  function formatKoreanDate(value) {
+    if (!value) return '';
+    const parts = value.split('-');
+    if (parts.length !== 3) return value;
+    return `${parts[0]}년 ${parts[1]}월 ${parts[2]}일`;
+  }
+
+  function joinAddress(zipId, addrId, detailId) {
+    const zip = $(zipId) ? $(zipId).value.trim() : '';
+    const addr = $(addrId) ? $(addrId).value.trim() : '';
+    const detail = $(detailId) ? $(detailId).value.trim() : '';
+    if (!addr) return '';
+    return `${zip ? '(' + zip + ') ' : ''}${addr}${detail ? ' ' + detail : ''}`;
+  }
+
+  function populate() {
+    const courtName = $('courtName').value || '';
+    const caseYear = $('caseYear').value || '';
+    const caseNum = ($('caseNum').value || '').trim();
+    const itemNum = ($('itemNum').value || '').trim();
+    const bidDate = formatKoreanDate($('bidDate').value || '');
+    const bidOnly = currentPrintMode() === 'bidOnly';
+    const agentType = currentAgentType();
     const isPersonal = document.querySelector('.bidder-type-btn.active').getAttribute('data-type') === 'personal';
 
-    // 입찰자 정보 추출
+    // ---- 입찰자(본인) 정보
     let bidderName = '';
-    let bidderRrn = '';
+    let bidderRegNo = '';   // 주민(사업자)등록번호
+    let bidderCorpNo = '';  // 법인등록번호
     let bidderPhone = '';
     let bidderAddr = '';
+    let bidderJob = '';
 
     if (isPersonal) {
-      bidderName = document.getElementById('bidderName').value || '';
-      const rrnFront = document.getElementById('bidderRrnFront').value || '';
-      const rrnBack = document.getElementById('bidderRrnBack').value || '';
-      bidderRrn = rrnFront ? `${rrnFront} - ${rrnBack || '*******'}` : '';
-      bidderPhone = document.getElementById('bidderPhone').value || '';
-      const zip = document.getElementById('bidderPostcode').value || '';
-      const addr1 = document.getElementById('bidderAddress').value || '';
-      const addr2 = document.getElementById('bidderAddressDetail').value || '';
-      bidderAddr = zip ? `(${zip}) ${addr1} ${addr2}`.trim() : `${addr1} ${addr2}`.trim();
+      bidderName = ($('bidderName').value || '').trim();
+      const front = ($('bidderRrnFront').value || '').replace(/[^0-9]/g, '');
+      const back = ($('bidderRrnBack').value || '').replace(/[^0-9]/g, '');
+      bidderRegNo = front ? (back ? `${front}-${back}` : front) : '';
+      bidderPhone = ($('bidderPhone').value || '').trim();
+      bidderAddr = joinAddress('bidderPostcode', 'bidderAddress', 'bidderAddressDetail');
+      bidderJob = ($('bidderJob').value || '').trim();
     } else {
-      bidderName = document.getElementById('corpName').value || '';
-      const corpNum = document.getElementById('corpRegNum').value || '';
-      bidderRrn = corpNum ? `법인등록: ${corpNum}` : '';
-      bidderPhone = document.getElementById('corpPhone').value || '';
-      const rep = document.getElementById('corpRepName').value || '';
-      const zip = document.getElementById('corpPostcode').value || '';
-      const addr1 = document.getElementById('corpAddress').value || '';
-      const addr2 = document.getElementById('corpAddressDetail').value || '';
-      bidderAddr = `(대표자: ${rep}) ${addr1} ${addr2}`.trim();
+      bidderName = ($('corpName').value || '').trim();
+      bidderRegNo = ($('corpBizNum').value || '').trim();
+      bidderCorpNo = ($('corpRegNum').value || '').trim();
+      bidderPhone = ($('corpPhone').value || '').trim();
+      bidderAddr = joinAddress('corpPostcode', 'corpAddress', 'corpAddressDetail');
+      bidderJob = ($('corpRepJob').value || '').trim();
     }
 
-    // 대리인 정보 추출
+    // ---- 대리인 정보
     let agentName = '';
     let agentRelation = '';
     let agentRrn = '';
     let agentPhone = '';
     let agentAddr = '';
-    let hasAgent = false;
+    let agentJob = '';
 
-    if (agentType === 'moda') {
-      hasAgent = true;
-      agentName = '박지은';
-      agentRelation = '매수신청대리인';
-      agentRrn = '공인중개사 (수원지법 등록)';
-      agentPhone = '010-7308-8284';
-      agentAddr = '경기도 시흥시 시청로 25, 3층 341호 (장현동, 모다부동산법원경매)';
-    } else if (agentType === 'custom') {
-      hasAgent = true;
-      agentName = document.getElementById('customAgentName').value || '';
-      agentRelation = document.getElementById('customAgentRelation').value || '';
-      agentRrn = document.getElementById('customAgentRrn').value || '';
-      agentPhone = document.getElementById('customAgentPhone').value || '';
-      agentAddr = document.getElementById('customAgentAddress').value || '';
+    if (!bidOnly) {
+      if (agentType === 'moda') {
+        agentName = '박지은';
+        agentRelation = '매수신청대리인';
+        agentJob = '공인중개사';
+        agentRrn = ($('modaAgentRrn').value || '').trim();
+        agentPhone = '010-7308-8284';
+        agentAddr = '경기도 시흥시 시청로 25, 3층 341호 (장현동, 모다부동산법원경매)';
+      } else {
+        agentName = ($('customAgentName').value || '').trim();
+        agentRelation = ($('customAgentRelation').value || '').trim();
+        agentJob = ($('customAgentJob').value || '').trim();
+        agentRrn = ($('customAgentRrn').value || '').trim();
+        agentPhone = ($('customAgentPhone').value || '').trim();
+        agentAddr = ($('customAgentAddress').value || '').trim();
+      }
     }
 
-    // 금액 정보
-    const isBlankPrice = blankPriceCheck && blankPriceCheck.checked;
-    const bidPriceVal = isBlankPrice ? '' : (document.getElementById('bidPrice').value || '');
-    const depositPriceVal = document.getElementById('depositPrice').value || '';
+    // ---- 금액
+    const isBlankPrice = !!(blankPriceCheck && blankPriceCheck.checked);
+    const bidPriceVal = isBlankPrice ? '' : ($('bidPrice').value || '');
+    const depositVal = $('depositPrice').value || '';
 
-    // 인쇄 영역 업데이트 (기일입찰표)
-    document.getElementById('pCourtName').textContent = courtName;
-    document.getElementById('pBidDate').textContent = bidDate ? `${bidDate.split('-')[0]}년 ${bidDate.split('-')[1]}월 ${bidDate.split('-')[2]}일` : '';
-    document.getElementById('pCaseNumber').textContent = `${caseYear} 타경 ${caseNum}`;
-    document.getElementById('pItemNumber').textContent = itemNum;
+    // ---- 1쪽 기일입찰표
+    setText('pCourtLine', courtName ? `${courtName}    집행관  귀하` : '지방법원    집행관  귀하');
+    setText('pBidDateLine', bidDate ? `입찰기일 :  ${bidDate}` : '입찰기일 :      년      월      일');
+    setText('pCaseNumber', `${caseYear} 타경 ${caseNum} 호`.replace(/\s+/g, ' '));
+    setText('pItemNumber', itemNum || '1');
 
-    // 본인
-    document.getElementById('pBidderName').textContent = bidderName;
-    document.getElementById('pBidderRrn').textContent = bidderRrn;
-    document.getElementById('pBidderPhone').textContent = bidderPhone;
-    document.getElementById('pBidderAddr').textContent = bidderAddr;
+    setText('pBidderName', bidderName);
+    setText('pBidderRegNo', bidderRegNo);
+    setText('pBidderCorpNo', bidderCorpNo);
+    setText('pBidderPhone', bidderPhone);
+    setText('pBidderAddr', bidderAddr);
 
-    // 대리인
-    if (hasAgent) {
-      document.getElementById('pAgentName').textContent = agentName;
-      document.getElementById('pAgentRelation').textContent = agentRelation;
-      document.getElementById('pAgentRrn').textContent = agentRrn;
-      document.getElementById('pAgentPhone').textContent = agentPhone;
-      document.getElementById('pAgentAddr').textContent = agentAddr;
-    } else {
-      document.getElementById('pAgentName').textContent = '(해당 없음 - 본인 직접 입찰)';
-      document.getElementById('pAgentRelation').textContent = '-';
-      document.getElementById('pAgentRrn').textContent = '-';
-      document.getElementById('pAgentPhone').textContent = '-';
-      document.getElementById('pAgentAddr').textContent = '-';
+    setText('pAgentName', agentName);
+    setText('pAgentRelation', agentRelation);
+    setText('pAgentRrn', agentRrn);
+    setText('pAgentPhone', agentPhone);
+    setText('pAgentAddr', agentAddr);
+
+    const guar = document.querySelector('input[name="guarMethod"]:checked');
+    const guarValue = guar ? guar.value : 'cash';
+    setText('pGuarCash', guarValue === 'cash' ? '☑' : '□');
+    setText('pGuarBond', guarValue === 'bond' ? '☑' : '□');
+
+    const depositLen = fillDigits('pDepositDigits', depositVal);
+    const bidLen = fillDigits('pBidDigits', bidPriceVal);
+
+    // ---- 2쪽 위임장
+    if (!bidOnly) {
+      setText('pPoaAgentName', agentName);
+      setText('pPoaAgentJob', agentJob);
+      setText('pPoaAgentRrn', agentRrn);
+      setText('pPoaAgentPhone', agentPhone);
+      setText('pPoaAgentAddr', agentAddr);
+
+      setText('pPoaCaseLine', courtName
+        ? `${courtName}    ${caseYear} 타경   ${caseNum}  호 부동산`
+        : `지방법원    ${caseYear} 타경   ${caseNum}  호 부동산`);
+
+      setText('pPoaB1Name', bidderName);
+      setText('pPoaB1Job', bidderJob);
+      setText('pPoaB1Rrn', bidderRegNo || bidderCorpNo);
+      setText('pPoaB1Phone', bidderPhone);
+      setText('pPoaB1Addr', bidderAddr);
+
+      setText('pPoaTo', courtName ? `${courtName} 귀중` : '지방법원 귀중');
     }
 
-    // 금액
-    document.getElementById('pBidPriceNum').textContent = isBlankPrice ? '(우편 제출용 공란)' : (bidPriceVal ? `₩ ${bidPriceVal}` : '');
-    document.getElementById('pBidPriceKor').textContent = isBlankPrice ? '' : numberToKorean(bidPriceVal);
-    document.getElementById('pDepositPriceNum').textContent = depositPriceVal ? `₩ ${depositPriceVal}` : '';
-    document.getElementById('pDepositPriceKor').textContent = depositPriceVal ? numberToKorean(depositPriceVal) : '';
-
-    // 위임장 시트
-    const powerOfAttorneySheet = document.getElementById('courtSheetPoa');
-    if (hasAgent) {
-      powerOfAttorneySheet.style.display = 'block';
-      document.getElementById('poaCaseNumber').textContent = `${caseYear} 타경 ${caseNum} (물건번호: ${itemNum})`;
-      document.getElementById('poaAgentName').textContent = agentName;
-      document.getElementById('poaAgentRelation').textContent = agentRelation;
-      document.getElementById('poaAgentRrn').textContent = agentRrn;
-      document.getElementById('poaAgentPhone').textContent = agentPhone;
-      document.getElementById('poaAgentAddr').textContent = agentAddr;
-
-      document.getElementById('poaBidderName').textContent = bidderName;
-      document.getElementById('poaBidderRrn').textContent = bidderRrn;
-      document.getElementById('poaBidderAddr').textContent = bidderAddr;
-    } else {
-      powerOfAttorneySheet.style.display = 'none';
-    }
+    return Math.max(depositLen, bidLen);
   }
 
-  // 8. 폼 제출 (PDF 생성 및 인쇄 트리거)
+  // ------------------------------------------------------- 제출 → 인쇄
   if (form) {
     form.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      const agree = document.getElementById('agreePrivacy');
+      const agree = $('agreePrivacy');
       if (agree && !agree.checked) {
         alert('개인정보 수집 및 이용에 동의해 주세요.');
         agree.focus();
         return;
       }
 
-      const courtName = document.getElementById('courtName').value;
-      if (!courtName) {
+      if (!$('courtName').value) {
         alert('법원명을 선택해 주세요.');
-        document.getElementById('courtName').focus();
+        $('courtName').focus();
         return;
       }
 
-      const caseNum = document.getElementById('caseNum').value;
-      if (!caseNum) {
+      if (!($('caseNum').value || '').trim()) {
         alert('사건번호를 입력해 주세요.');
-        document.getElementById('caseNum').focus();
+        $('caseNum').focus();
         return;
       }
 
-      // 인쇄 영역에 데이터 기입
-      populatePrintSheet();
+      const isPersonal = document.querySelector('.bidder-type-btn.active').getAttribute('data-type') === 'personal';
+      const bidderName = isPersonal ? $('bidderName').value.trim() : $('corpName').value.trim();
+      if (!bidderName) {
+        alert(isPersonal ? '입찰자(본인) 성명을 입력해 주세요.' : '법인명을 입력해 주세요.');
+        (isPersonal ? $('bidderName') : $('corpName')).focus();
+        return;
+      }
 
-      // 인쇄 창 호출 (인쇄 대상 외 요소는 @media print로 자동 숨김 처리됨)
+      const maxLen = populate();
+      if (maxLen > 12) {
+        alert('금액이 12자리(9,999억 원)를 넘습니다. 금액을 다시 확인해 주세요.');
+        return;
+      }
+
       window.print();
     });
   }
 
-  // 모달 제어
-  if (btnCloseModal && printModal) {
-    btnCloseModal.addEventListener('click', () => {
-      printModal.classList.remove('open');
-    });
-  }
-
-  if (btnModalPrint) {
-    btnModalPrint.addEventListener('click', () => {
-      window.print();
-    });
-  }
+  // ------------------------------------------------------- 초기 상태
+  applyPrintMode();
+  const initialAgent = currentAgentType();
+  if (modaAgentCard) modaAgentCard.style.display = initialAgent === 'moda' ? 'block' : 'none';
+  if (customAgentFields) customAgentFields.style.display = initialAgent === 'custom' ? 'block' : 'none';
 });

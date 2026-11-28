@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>경매 입찰표 생성기 | 모다부동산법원경매</title>
-  <meta name="description" content="기일입찰표와 위임장을 법정 표준 규격으로 자동 생성하는 경매 입찰표 PDF 생성기입니다. 입력하신 정보는 서버에 저장되지 않습니다." />
+  <meta name="description" content="대법원 전산양식 A3360 기일입찰표·위임장을 법원 양식 그대로 인쇄하는 경매 입찰표 PDF 생성기입니다. 입력하신 정보는 서버에 저장되지 않습니다." />
   <link rel="canonical" href="https://www.moda8284.com/auction/bid-pdf" />
   <meta property="og:site_name" content="모다경매" />
   <link rel="icon" href="/favicon.ico" sizes="any" />
@@ -12,7 +12,10 @@
   <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700;900&display=swap" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <link rel="stylesheet" href="/style.css" />
   <link rel="stylesheet" href="/bid-form.css" />
@@ -63,8 +66,8 @@
       <img class="page-thumb" src="/images/step_2.jpg" alt="서명란에 놓인 만년필과 인장" />
       <div>
         <h1>경매 입찰표 생성기</h1>
-        <p class="page-lead">기일입찰표와 위임장을 법정 표준 서식으로 만들어 인쇄하거나 PDF로 저장할 수 있습니다. 인감증명서 방식으로 직접 준비하실 때 사용하세요.</p>
-        <p class="page-meta">입력하신 정보는 서버에 저장되지 않고 이 브라우저에서만 사용됩니다.</p>
+        <p class="page-lead">대법원 전산양식 A3360 <strong>기일입찰표</strong>와 <strong>위임장</strong>을 법원 양식 그대로 만들어 인쇄하거나 PDF로 저장할 수 있습니다. 인감증명서 방식으로 직접 준비하실 때 사용하세요.</p>
+        <p class="page-meta">입력하신 정보는 서버로 전송되지 않고, 이 브라우저 안에서만 사용됩니다.</p>
       </div>
     </div>
   </div>
@@ -78,11 +81,11 @@
       <div class="gen-header-card">
         <div>
           <h2 class="gen-header-title">경매 입찰표 PDF 생성기</h2>
-          <p class="gen-header-desc">기일입찰표 + 위임장을 법정 표준 규격으로 자동으로 생성합니다.</p>
+          <p class="gen-header-desc">[전산양식 A3360] 기일입찰표 · 위임장을 A4 한 장 그대로 출력합니다.</p>
         </div>
         <div class="gen-header-badge">
           <i class="fa-solid fa-shield-halved"></i>
-          <span>법원 표준 서식 연동</span>
+          <span>브라우저 안에서만 처리</span>
         </div>
       </div>
 
@@ -95,28 +98,49 @@
       <!-- 입력 양식 폼 -->
       <form id="bidGeneratorForm" novalidate>
 
-        <!-- 1. 대리인 선택 카드 -->
+        <!-- 1. 출력 방식 -->
         <div class="form-card">
           <h2 class="form-card-title">
-            <i class="fa-solid fa-user-tie" style="color: var(--accent-gold);"></i>
-            대리인 선택
+            <i class="fa-solid fa-print" style="color: var(--accent-gold);"></i>
+            출력 방식
           </h2>
-          <p class="form-card-desc">입찰을 직접 진행하시는지, 또는 대리인에게 위임하시는지 선택해 주세요.</p>
+          <p class="form-card-desc">어떤 서류를 만들지 먼저 선택해 주세요. 종이가 몇 장 나올지가 여기서 정해집니다.</p>
+
+          <div class="print-mode-group">
+            <label class="print-mode-label">
+              <input type="radio" name="printMode" value="withPoa" checked />
+              <div class="print-mode-body">
+                <span class="radio-main-title">기일입찰표 + 위임장 함께 출력 <em>(대리 입찰)</em></span>
+                <span class="radio-sub-info">A4 2장 — 1쪽 기일입찰표, 2쪽 위임장</span>
+              </div>
+              <span class="print-mode-pages">2쪽</span>
+            </label>
+
+            <label class="print-mode-label">
+              <input type="radio" name="printMode" value="bidOnly" />
+              <div class="print-mode-body">
+                <span class="radio-main-title">기일입찰표만 출력 <em>(본인 입찰)</em></span>
+                <span class="radio-sub-info">A4 1장 — 대리인란은 비워 둔 기일입찰표만</span>
+              </div>
+              <span class="print-mode-pages">1쪽</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 2. 대리인 선택 -->
+        <div class="form-card" id="agentCard">
+          <h2 class="form-card-title">
+            <i class="fa-solid fa-user-tie" style="color: var(--accent-gold);"></i>
+            대리인
+          </h2>
+          <p class="form-card-desc">기일입찰표의 대리인란과 위임장에 들어갈 대리인을 정해 주세요.</p>
 
           <div class="agent-radio-group">
             <label class="agent-radio-label">
               <input type="radio" name="agentType" value="moda" checked />
               <div class="radio-content">
                 <span class="radio-main-title">모다부동산법원경매 대표에게 대리입찰 의뢰</span>
-                <span class="radio-sub-info">— 매수신청대리 등록 공인중개사 (기일입찰표 + 위임장 자동 생성)</span>
-              </div>
-            </label>
-
-            <label class="agent-radio-label">
-              <input type="radio" name="agentType" value="self" />
-              <div class="radio-content">
-                <span class="radio-main-title">본인이 직접 입찰</span>
-                <span class="radio-sub-info">— 대리인란 없이 기일입찰표만 생성 (위임장 없음)</span>
+                <span class="radio-sub-info">— 매수신청대리 등록 공인중개사</span>
               </div>
             </label>
 
@@ -129,7 +153,7 @@
             </label>
           </div>
 
-          <!-- 모다부동산법원경매 대표 정보 카드 (기본 표시) -->
+          <!-- 모다부동산법원경매 대표 정보 카드 -->
           <div class="agent-info-card" id="modaAgentCard">
             <div class="agent-info-grid">
               <div class="agent-info-item">
@@ -141,8 +165,8 @@
                 <span class="agent-item-val">매수신청대리인</span>
               </div>
               <div class="agent-info-item">
-                <span class="agent-item-label">자격</span>
-                <span class="agent-item-val">수원지방법원 정식등록 공인중개사</span>
+                <span class="agent-item-label">직업</span>
+                <span class="agent-item-val">공인중개사</span>
               </div>
               <div class="agent-info-item">
                 <span class="agent-item-label">전화번호</span>
@@ -152,45 +176,53 @@
                 <span class="agent-item-label">사무소 주소</span>
                 <span class="agent-item-val">경기도 시흥시 시청로 25, 3층 341호 (장현동, 모다부동산법원경매)</span>
               </div>
+              <div class="agent-info-item full-width">
+                <label class="agent-item-label" for="modaAgentRrn">대리인 주민등록번호 (선택 — 비워 두면 공란으로 인쇄됩니다)</label>
+                <input type="text" id="modaAgentRrn" class="form-control" placeholder="예: 750101-1234567" autocomplete="off" />
+              </div>
             </div>
           </div>
 
-          <!-- 직접 지정 대리인 입력란 (다른 대리인 지정 시 표시) -->
+          <!-- 직접 지정 대리인 입력란 -->
           <div id="customAgentFields" style="display: none; margin-top: 18px; padding-top: 18px; border-top: 1px dashed var(--border-light);">
             <div class="form-grid-2">
               <div class="form-group">
                 <label class="form-label" for="customAgentName">대리인 성명 <span class="req">*</span></label>
-                <input type="text" id="customAgentName" class="form-control" placeholder="대리인 성명 입력" />
+                <input type="text" id="customAgentName" class="form-control" placeholder="대리인 성명 입력" autocomplete="off" />
               </div>
               <div class="form-group">
                 <label class="form-label" for="customAgentRelation">본인과의 관계 <span class="req">*</span></label>
-                <input type="text" id="customAgentRelation" class="form-control" placeholder="예: 배우자, 자녀, 직원" />
+                <input type="text" id="customAgentRelation" class="form-control" placeholder="예: 배우자, 자녀, 직원" autocomplete="off" />
               </div>
             </div>
             <div class="form-grid-2">
               <div class="form-group">
-                <label class="form-label" for="customAgentRrn">주민등록번호 <span class="req">*</span></label>
-                <input type="text" id="customAgentRrn" class="form-control" placeholder="예: 800101-1234567" />
+                <label class="form-label" for="customAgentJob">직업</label>
+                <input type="text" id="customAgentJob" class="form-control" placeholder="예: 회사원" autocomplete="off" />
               </div>
               <div class="form-group">
                 <label class="form-label" for="customAgentPhone">전화번호 <span class="req">*</span></label>
-                <input type="tel" id="customAgentPhone" class="form-control" placeholder="예: 010-1234-5678" />
+                <input type="tel" id="customAgentPhone" class="form-control" placeholder="예: 010-1234-5678" autocomplete="off" />
               </div>
             </div>
             <div class="form-group">
+              <label class="form-label" for="customAgentRrn">주민등록번호</label>
+              <input type="text" id="customAgentRrn" class="form-control" placeholder="예: 800101-1234567" autocomplete="off" />
+            </div>
+            <div class="form-group">
               <label class="form-label" for="customAgentAddress">대리인 주소 <span class="req">*</span></label>
-              <input type="text" id="customAgentAddress" class="form-control" placeholder="주민등록상 주소 입력" />
+              <input type="text" id="customAgentAddress" class="form-control" placeholder="주민등록상 주소 입력" autocomplete="off" />
             </div>
           </div>
         </div>
 
-        <!-- 2. 사건 정보 카드 -->
+        <!-- 3. 사건 정보 -->
         <div class="form-card">
           <h2 class="form-card-title">
             <i class="fa-solid fa-gavel" style="color: var(--accent-gold);"></i>
             사건 정보
           </h2>
-          <p class="form-card-desc">법원을 선택하고 사건번호 및 매각기일을 입력해 주세요.</p>
+          <p class="form-card-desc">법원을 선택하고 사건번호 및 입찰기일을 입력해 주세요.</p>
 
           <div class="form-group">
             <label class="form-label" for="courtName">법원명 <span class="req">*</span></label>
@@ -229,7 +261,7 @@
                 <option value="창원지방법원">창원지방법원 본원/지원</option>
                 <option value="광주지방법원">광주지방법원 본원/지원</option>
                 <option value="전주지방법원">전주지방법원 본원/지원</option>
-                <option value="춘천지방법원">춘천지방법원 본원/지원</option>
+                <option value="춘천지방법원">춘천지방법원</option>
                 <option value="제주지방법원">제주지방법원</option>
               </optgroup>
             </select>
@@ -245,7 +277,7 @@
                 <option value="2023">2023</option>
               </select>
               <span class="case-badge">타경</span>
-              <input type="text" id="caseNum" class="form-control case-input" placeholder="사건번호 (예: 12345)" required />
+              <input type="text" id="caseNum" class="form-control case-input" placeholder="사건번호 (예: 12345)" autocomplete="off" required />
               <button type="button" class="btn-case-search" id="btnCaseSearch">
                 <i class="fa-solid fa-magnifying-glass"></i> 입력 확인
               </button>
@@ -259,20 +291,19 @@
             </div>
             <div class="form-group">
               <label class="form-label" for="itemNum">물건번호</label>
-              <input type="text" id="itemNum" class="form-control" value="1" placeholder="1" />
+              <input type="text" id="itemNum" class="form-control" value="1" placeholder="1" autocomplete="off" />
             </div>
           </div>
         </div>
 
-        <!-- 3. 본인 (입찰자) 정보 카드 -->
+        <!-- 4. 본인 (입찰자) 정보 -->
         <div class="form-card">
           <h2 class="form-card-title">
             <i class="fa-solid fa-id-card" style="color: var(--accent-gold);"></i>
             본인 (입찰자) 정보
           </h2>
-          <p class="form-card-desc">입찰자 명의를 선택하고 인적사항을 정확히 입력해 주세요.</p>
+          <p class="form-card-desc">입찰자 명의를 선택하고 인적사항을 정확히 입력해 주세요. 입력한 내용이 그대로 입찰표에 인쇄됩니다.</p>
 
-          <!-- 개인 / 법인 전환 탭 -->
           <div class="bidder-type-tabs">
             <button type="button" class="bidder-type-btn active" data-type="personal">개인 명의</button>
             <button type="button" class="bidder-type-btn" data-type="corporate">법인 명의</button>
@@ -283,21 +314,26 @@
             <div class="form-grid-2">
               <div class="form-group">
                 <label class="form-label" for="bidderName">성명 <span class="req">*</span></label>
-                <input type="text" id="bidderName" class="form-control" placeholder="홍길동" required />
+                <input type="text" id="bidderName" class="form-control" placeholder="홍길동" autocomplete="off" required />
               </div>
               <div class="form-group">
                 <label class="form-label" for="bidderPhone">전화번호 <span class="req">*</span></label>
-                <input type="tel" id="bidderPhone" class="form-control" placeholder="010-1234-5678" required />
+                <input type="tel" id="bidderPhone" class="form-control" placeholder="010-1234-5678" autocomplete="off" required />
               </div>
             </div>
 
             <div class="form-group">
-              <label class="form-label">주민등록번호 (주민/외국인) <span class="req">*</span></label>
+              <label class="form-label">주민등록번호 <span class="req">*</span></label>
               <div class="rrn-row">
-                <input type="text" id="bidderRrnFront" class="form-control rrn-input" maxlength="6" placeholder="앞 6자리" required />
+                <input type="text" id="bidderRrnFront" class="form-control rrn-input" maxlength="6" placeholder="앞 6자리" inputmode="numeric" autocomplete="off" required />
                 <span class="rrn-dash">-</span>
-                <input type="password" id="bidderRrnBack" class="form-control rrn-input" maxlength="7" placeholder="뒤 7자리" required />
+                <input type="password" id="bidderRrnBack" class="form-control rrn-input" maxlength="7" placeholder="뒤 7자리" inputmode="numeric" autocomplete="off" required />
               </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="bidderJob">직업 (위임장에 표시)</label>
+              <input type="text" id="bidderJob" class="form-control" placeholder="예: 회사원 (비워 두면 공란)" autocomplete="off" />
             </div>
 
             <div class="form-group">
@@ -312,32 +348,43 @@
                 <input type="text" id="bidderAddress" class="form-control" placeholder="기본주소 (우편번호 검색 시 자동 입력)" readonly required />
               </div>
               <div>
-                <input type="text" id="bidderAddressDetail" class="form-control" placeholder="상세주소 입력 (예: 101동 1203호)" />
+                <input type="text" id="bidderAddressDetail" class="form-control" placeholder="상세주소 입력 (예: 101동 1203호)" autocomplete="off" />
               </div>
             </div>
           </div>
 
-          <!-- 법인 명의 필드 (전환 시 표시) -->
+          <!-- 법인 명의 필드 -->
           <div id="corporateBidderFields" style="display: none;">
             <div class="form-grid-2">
               <div class="form-group">
                 <label class="form-label" for="corpName">법인명 (상호) <span class="req">*</span></label>
-                <input type="text" id="corpName" class="form-control" placeholder="주식회사 모다경매" />
+                <input type="text" id="corpName" class="form-control" placeholder="주식회사 모다경매" autocomplete="off" />
               </div>
               <div class="form-group">
+                <label class="form-label" for="corpBizNum">사업자등록번호</label>
+                <input type="text" id="corpBizNum" class="form-control" placeholder="예: 123-45-67890" autocomplete="off" />
+              </div>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
                 <label class="form-label" for="corpRegNum">법인등록번호 <span class="req">*</span></label>
-                <input type="text" id="corpRegNum" class="form-control" placeholder="예: 123456-1234567" />
+                <input type="text" id="corpRegNum" class="form-control" placeholder="예: 123456-1234567" autocomplete="off" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="corpPhone">대표 연락처 <span class="req">*</span></label>
+                <input type="tel" id="corpPhone" class="form-control" placeholder="010-0000-0000" autocomplete="off" />
               </div>
             </div>
 
             <div class="form-grid-2">
               <div class="form-group">
                 <label class="form-label" for="corpRepName">대표자 성명 <span class="req">*</span></label>
-                <input type="text" id="corpRepName" class="form-control" placeholder="대표자 성명" />
+                <input type="text" id="corpRepName" class="form-control" placeholder="대표자 성명" autocomplete="off" />
               </div>
               <div class="form-group">
-                <label class="form-label" for="corpPhone">대표 연락처 <span class="req">*</span></label>
-                <input type="tel" id="corpPhone" class="form-control" placeholder="010-0000-0000" />
+                <label class="form-label" for="corpRepJob">대표자 직업</label>
+                <input type="text" id="corpRepJob" class="form-control" placeholder="예: 회사원" autocomplete="off" />
               </div>
             </div>
 
@@ -353,19 +400,19 @@
                 <input type="text" id="corpAddress" class="form-control" placeholder="법인 기본주소" readonly />
               </div>
               <div>
-                <input type="text" id="corpAddressDetail" class="form-control" placeholder="상세주소 (호실, 층수 등)" />
+                <input type="text" id="corpAddressDetail" class="form-control" placeholder="상세주소 (호실, 층수 등)" autocomplete="off" />
               </div>
             </div>
           </div>
         </div>
 
-        <!-- 4. 입찰 금액 카드 -->
+        <!-- 5. 입찰 금액 -->
         <div class="form-card">
           <h2 class="form-card-title">
             <i class="fa-solid fa-won-sign" style="color: var(--accent-gold);"></i>
             보증금액 · 입찰가격
           </h2>
-          <p class="form-card-desc">비워두면 금액란이 공란으로 출력됩니다.</p>
+          <p class="form-card-desc">금액은 입찰표의 자릿수 칸(천억~일)에 한 자리씩 맞춰 인쇄됩니다. 비워두면 그 칸은 공란으로 출력됩니다.</p>
 
           <!-- 우편 제출용 안내 박스 (체크박스) -->
           <div class="blank-price-box">
@@ -384,15 +431,29 @@
             <!-- 보증금액 (기일입찰표 순서대로 먼저) -->
             <div class="form-group">
               <label class="form-label" for="depositPrice">보증금액 (원) <span class="req">*</span></label>
-              <input type="text" id="depositPrice" class="form-control" placeholder="예: 10,640,000" />
+              <input type="text" id="depositPrice" class="form-control" placeholder="예: 10,640,000" inputmode="numeric" autocomplete="off" />
               <div class="price-korean-text" id="depositPriceKorean"></div>
             </div>
 
             <!-- 입찰가격 -->
             <div class="form-group">
               <label class="form-label" for="bidPrice">입찰가격 (원)</label>
-              <input type="text" id="bidPrice" class="form-control" placeholder="우편 제출용 (입찰 당일 대리인이 직접 기재)" disabled />
+              <input type="text" id="bidPrice" class="form-control" placeholder="우편 제출용 (입찰 당일 대리인이 직접 기재)" inputmode="numeric" autocomplete="off" disabled />
               <div class="price-korean-text" id="bidPriceKorean">※ 우편 제출용으로 선택되어 입찰가격란은 공란으로 인쇄됩니다.</div>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-top: 6px;">
+            <span class="form-label">보증의 제공방법 <span class="req">*</span></span>
+            <div class="guar-radio-row">
+              <label class="guar-option">
+                <input type="radio" name="guarMethod" value="cash" checked />
+                <span>현금 · 자기앞수표</span>
+              </label>
+              <label class="guar-option">
+                <input type="radio" name="guarMethod" value="bond" />
+                <span>보증서</span>
+              </label>
             </div>
           </div>
 
@@ -402,225 +463,306 @@
           </p>
         </div>
 
-        <!-- 5. 동의 및 버튼 카드 -->
+        <!-- 6. 동의 및 버튼 -->
         <div class="form-card" style="text-align: center;">
           <div class="agreement-box" style="justify-content: center;">
             <input type="checkbox" id="agreePrivacy" required checked />
             <label for="agreePrivacy" style="cursor: pointer;">
-              개인정보 수집 및 이용에 동의합니다. (입력하신 정보는 서버에 저장되지 않으며, 사용자 PC 브라우저에서 입찰표 문서 생성에만 안전하게 사용됩니다.)
+              개인정보 수집 및 이용에 동의합니다. (입력하신 정보는 서버로 전송되지 않으며, 이 브라우저 안에서 입찰표 문서를 만드는 데에만 사용됩니다.)
             </label>
           </div>
           <p class="consent-policy-link" style="text-align:center; margin-left:0;"><a href="/privacy" target="_blank" rel="noopener">개인정보 처리방침 전문 보기 →</a></p>
 
           <button type="submit" class="btn-generate-pdf">
             <i class="fa-solid fa-file-pdf"></i>
-            <span>PDF 생성 및 인쇄하기 (기일입찰표 + 위임장)</span>
+            <span id="btnGenerateLabel">PDF 생성 및 인쇄하기 (기일입찰표 + 위임장 · 2쪽)</span>
           </button>
+
+          <p class="print-help">인쇄 대화상자에서 <strong>용지 A4 · 여백 없음(또는 기본) · 배율 100%</strong>로 두시면 법원 양식 그대로 1:1로 인쇄됩니다. ‘PDF로 저장’을 선택하면 파일로 받으실 수 있습니다.</p>
         </div>
 
       </form>
     </div>
   </main>
 
-<div id="courtPrintArea">
+  <!-- ============================================================
+       인쇄 전용 영역 — 대법원 전산양식 A3360 (기일입찰표 · 위임장)
+       화면에서는 숨김, 인쇄 시에만 표시
+       ============================================================ -->
+  <div id="courtPrintArea">
 
-    <!-- [1페이지] 기일입찰표 (부동산) -->
-    <div class="court-sheet">
-      <div class="court-title-box">
-        <h1>기 일 입 찰 표</h1>
-        <p>(부동산용)</p>
-      </div>
-
-      <div class="court-meta-row">
-        <div><strong>입찰기일:</strong> <span class="court-val" id="pBidDate">2026년 00월 00일</span></div>
-        <div><strong>법원명:</strong> <span class="court-val" id="pCourtName">수원지방법원 안산지원</span></div>
-      </div>
-
-      <table class="court-table">
+    <!-- [1쪽] 기일입찰표 (앞면) -->
+    <div class="sheet sheet-bid">
+      <table class="form-table">
         <colgroup>
-          <col style="width: 12%;" />
-          <col style="width: 14%;" />
-          <col style="width: 20%;" />
-          <col style="width: 15%;" />
-          <col style="width: 39%;" />
+          <col class="w1" /><col class="w2" /><col class="w3" /><col class="w4" /><col class="w5" />
+          <col class="w6" /><col class="w7" /><col class="w8" /><col class="w9" /><col class="w10" />
         </colgroup>
         <tbody>
-          <tr>
-            <th>사건번호</th>
-            <td colspan="4">
-              <span class="court-val" id="pCaseNumber" style="font-size: 11pt; font-weight: 800;">2026 타경 00000</span>
-              &nbsp;&nbsp;&nbsp;&nbsp;
-              <strong>물건번호:</strong> <span class="court-val" id="pItemNumber">1</span>
-            </td>
-          </tr>
-          <!-- 입찰자 (본인) 정보 -->
-          <tr>
-            <th rowspan="3">입 찰 자<br />(본 인)</th>
-            <th>성 명</th>
-            <td>
-              <span class="court-val" id="pBidderName" style="font-weight: 700;">홍길동</span>
-              <span style="float: right; color: #777;">(인)</span>
-            </td>
-            <th>주민등록번호</th>
-            <td><span class="court-val" id="pBidderRrn">800101 - 1234567</span></td>
-          </tr>
-          <tr>
-            <th>전화번호</th>
-            <td colspan="4"><span class="court-val" id="pBidderPhone">010-1234-5678</span></td>
-          </tr>
-          <tr>
-            <th>주 소</th>
-            <td colspan="4"><span class="court-val" id="pBidderAddr">경기도 시흥시 시청로 25</span></td>
-          </tr>
-
-          <!-- 대리인 정보 -->
-          <tr>
-            <th rowspan="3">대 리 인</th>
-            <th>성 명</th>
-            <td>
-              <span class="court-val" id="pAgentName">박지은</span>
-              <span style="float: right; color: #777;">(인)</span>
-            </td>
-            <th>본인과의 관계</th>
-            <td><span class="court-val" id="pAgentRelation">매수신청대리인</span></td>
-          </tr>
-          <tr>
-            <th>주민등록번호</th>
-            <td><span class="court-val" id="pAgentRrn">공인중개사 정식등록</span></td>
-            <th>전화번호</th>
-            <td><span class="court-val" id="pAgentPhone">010-7308-8284</span></td>
-          </tr>
-          <tr>
-            <th>주 소</th>
-            <td colspan="4"><span class="court-val" id="pAgentAddr">경기도 시흥시 시청로 25, 3층 341호 (모다부동산법원경매)</span></td>
-          </tr>
-
-          <!-- 보증의 제공방법 (실물 기일입찰표 순서: 제공방법 → 보증금액 → 입찰가격) -->
-          <tr>
-            <th>보증의 제공방법</th>
-            <td colspan="4">
-              [ v ] 현금 · 자기앞수표 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ &nbsp; ] 보증서
+          <tr class="row-head">
+            <td colspan="10" class="cell-head">
+              <div class="head-line1">
+                <span class="head-side">(앞면)</span>
+                <span class="head-title">기&nbsp;&nbsp;일&nbsp;&nbsp;입&nbsp;&nbsp;찰&nbsp;&nbsp;표</span>
+              </div>
+              <div class="head-line2">
+                <span id="pCourtLine">수원지방법원 안산지원&nbsp;&nbsp;&nbsp;&nbsp;집행관&nbsp;&nbsp;귀하</span>
+                <span id="pBidDateLine">입찰기일 :&nbsp;&nbsp;2026년&nbsp;&nbsp;12월&nbsp;&nbsp;05일</span>
+              </div>
             </td>
           </tr>
 
-          <!-- 보증 금액 -->
-          <tr>
-            <th style="height: 44px;">보증금액</th>
-            <td colspan="4" style="font-size: 11pt;">
-              <span class="court-val" id="pDepositPriceNum" style="font-weight: 800; font-size: 12pt;"></span>
-              &nbsp;&nbsp;
-              <span class="court-val" id="pDepositPriceKor" style="font-size: 10pt; color: #333;"></span>
+          <tr class="row-case">
+            <td colspan="2" rowspan="2" class="c-label c-stack"><span>사 건</span><span>번 호</span></td>
+            <td colspan="5" rowspan="2" class="c-value c-center c-case" id="pCaseNumber">2026 타경 12345 호</td>
+            <td rowspan="2" class="c-label c-stack"><span>물건</span><span>번호</span></td>
+            <td colspan="2" class="c-value c-center" id="pItemNumber">1</td>
+          </tr>
+          <tr class="row-case-note">
+            <td colspan="2" class="c-note">※물건번호가 여러 개인 경우에는 꼭 기재</td>
+          </tr>
+
+          <tr class="row-bidder">
+            <td rowspan="6" class="c-label c-vert"><span>입</span><span>찰</span><span>자</span></td>
+            <td colspan="2" rowspan="3" class="c-label">본인</td>
+            <td class="c-label">성 명</td>
+            <td colspan="4" class="c-value" id="pBidderName"></td>
+            <td class="c-label">전화번호</td>
+            <td class="c-value" id="pBidderPhone"></td>
+          </tr>
+          <tr class="row-bidder">
+            <td class="c-label">주민(사업자)<br />등록번호</td>
+            <td colspan="2" class="c-value" id="pBidderRegNo"></td>
+            <td colspan="2" class="c-label">법인등록번호</td>
+            <td colspan="2" class="c-value" id="pBidderCorpNo"></td>
+          </tr>
+          <tr class="row-bidder">
+            <td class="c-label">주 소</td>
+            <td colspan="6" class="c-value" id="pBidderAddr"></td>
+          </tr>
+          <tr class="row-agent">
+            <td colspan="2" rowspan="3" class="c-label">대리인</td>
+            <td class="c-label">성 명</td>
+            <td colspan="4" class="c-value" id="pAgentName"></td>
+            <td class="c-label">본인과의<br />관 계</td>
+            <td class="c-value" id="pAgentRelation"></td>
+          </tr>
+          <tr class="row-agent">
+            <td class="c-label">주민등록번호</td>
+            <td colspan="4" class="c-value" id="pAgentRrn"></td>
+            <td class="c-label">전화번호</td>
+            <td class="c-value" id="pAgentPhone"></td>
+          </tr>
+          <tr class="row-agent">
+            <td class="c-label">주 소</td>
+            <td colspan="6" class="c-value" id="pAgentAddr"></td>
+          </tr>
+
+          <tr class="row-deposit-method">
+            <td colspan="5" class="cell-method">
+              <div class="method-row">
+                <span class="method-label">보증의<br />제공방법</span>
+                <span class="method-opts">
+                  <span class="method-opt"><span class="box" id="pGuarCash">□</span> 현금‧자기앞수표</span>
+                  <span class="method-opt"><span class="box" id="pGuarBond">□</span> 보증서</span>
+                </span>
+              </div>
+            </td>
+            <td colspan="5" class="c-value cell-return">
+              <div>보증을 반환</div>
+              <div>받았습니다.&nbsp;&nbsp;&nbsp;입찰자&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(인)</div>
             </td>
           </tr>
 
-          <!-- 입찰 가격 -->
-          <tr>
-            <th style="height: 48px;">입찰가격</th>
-            <td colspan="4" style="font-size: 11pt;">
-              <span class="court-val" id="pBidPriceNum" style="font-weight: 800; font-size: 13pt;"></span>
-              &nbsp;&nbsp;
-              <span class="court-val" id="pBidPriceKor" style="font-size: 10pt; color: #333;"></span>
+          <tr class="row-amount">
+            <td colspan="10" class="cell-amount">
+              <table class="amount-table">
+                <colgroup>
+                  <col class="am-unit" />
+                  <col class="am-digit" span="12" />
+                  <col class="am-won" />
+                </colgroup>
+                <tbody>
+                  <tr class="am-head">
+                    <td rowspan="2" class="c-label c-stack"><span>보증</span><span>금액</span></td>
+                    <td class="am-h">천억</td><td class="am-h">백억</td><td class="am-h">십억</td><td class="am-h">억</td>
+                    <td class="am-h">천만</td><td class="am-h">백만</td><td class="am-h">십만</td><td class="am-h">만</td>
+                    <td class="am-h">천</td><td class="am-h">백</td><td class="am-h">십</td><td class="am-h">일</td>
+                    <td rowspan="2" class="am-won">원</td>
+                  </tr>
+                  <tr class="am-digits" id="pDepositDigits">
+                    <td class="dg"></td><td class="dg"></td><td class="dg"></td><td class="dg"></td>
+                    <td class="dg"></td><td class="dg"></td><td class="dg"></td><td class="dg"></td>
+                    <td class="dg"></td><td class="dg"></td><td class="dg"></td><td class="dg"></td>
+                  </tr>
+                  <tr class="am-head">
+                    <td rowspan="2" class="c-label c-stack"><span>입찰</span><span>가격</span></td>
+                    <td class="am-h">천억</td><td class="am-h">백억</td><td class="am-h">십억</td><td class="am-h">억</td>
+                    <td class="am-h">천만</td><td class="am-h">백만</td><td class="am-h">십만</td><td class="am-h">만</td>
+                    <td class="am-h">천</td><td class="am-h">백</td><td class="am-h">십</td><td class="am-h">일</td>
+                    <td rowspan="2" class="am-won">원</td>
+                  </tr>
+                  <tr class="am-digits" id="pBidDigits">
+                    <td class="dg"></td><td class="dg"></td><td class="dg"></td><td class="dg"></td>
+                    <td class="dg"></td><td class="dg"></td><td class="dg"></td><td class="dg"></td>
+                    <td class="dg"></td><td class="dg"></td><td class="dg"></td><td class="dg"></td>
+                  </tr>
+                </tbody>
+              </table>
             </td>
+          </tr>
+
+          <tr class="row-asterisk">
+            <td colspan="10" class="cell-asterisk">✱ 입찰가격에 ‘0’을 한 번 더 기재하지 않도록 주의하시기 바랍니다(아래 입찰가격 기재 사례 참고).</td>
           </tr>
         </tbody>
       </table>
 
-      <!-- 보증물 반환 영수증란 -->
-      <div style="border: 1px solid #000; padding: 12px 14px; margin-top: 14px;">
-        <div style="text-align: center; font-weight: 800; font-size: 11pt; margin-bottom: 8px;">매수신청보증 반환영수증</div>
-        <p style="font-size: 8.5pt; line-height: 1.6; margin-bottom: 10px;">
-          위 사건의 매각기일에 입찰하였으나 낙찰(최고가매수신고인 결정)되지 아니하였으므로, 제출하였던 매수신청보증금을 그 자리에서 정히 영수하여 반환받았습니다.
-        </p>
-        <div style="display: flex; justify-content: flex-end; gap: 30px; font-size: 9.5pt; margin-top: 12px;">
-          <div>입찰자 (대리인): &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (서명 또는 날인)</div>
-        </div>
+      <!-- 입찰가격 기재 사례 -->
+      <div class="example-block">
+        <div class="example-title">입찰가격 190,000,000원의 기재 사례</div>
+        <table class="example-table">
+          <colgroup>
+            <col class="am-unit" />
+            <col class="am-digit" span="12" />
+            <col class="am-won" />
+          </colgroup>
+          <tbody>
+            <tr class="am-head">
+              <td class="ex-label">입찰<br />가격</td>
+              <td class="am-h">천억</td><td class="am-h">백억</td><td class="am-h">십억</td><td class="am-h">억</td>
+              <td class="am-h">천만</td><td class="am-h">백만</td><td class="am-h">십만</td><td class="am-h">만</td>
+              <td class="am-h">천</td><td class="am-h">백</td><td class="am-h">십</td><td class="am-h">일</td>
+              <td class="am-won">원</td>
+            </tr>
+            <tr class="ex-digits">
+              <td class="ex-label">⭕</td>
+              <td class="dg"></td><td class="dg"></td><td class="dg"></td><td class="dg">1</td>
+              <td class="dg">9</td><td class="dg">0</td><td class="dg">0</td><td class="dg">0</td>
+              <td class="dg">0</td><td class="dg">0</td><td class="dg">0</td><td class="dg">0</td>
+              <td class="am-won"></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="example-caption">끝에 ‘0’을 한 번 더 붙이거나 중간에 ‘0’을 끼워 넣으면 자릿수가 한 칸씩 밀려 무효가 됩니다.</div>
       </div>
 
-      <div class="court-notice-box" style="margin-top: 14px;">
-        <strong>[입찰표 작성 시 주의사항]</strong><br />
-        1. 입찰가격을 수정한 입찰표는 무효로 처리되므로 금액을 정정할 수 없습니다. 고쳐 쓸 경우 새 용지를 사용하십시오.<br />
-        2. 입찰보증금은 최저매각가격의 10%(재매각 사건 등 특별매각조건은 그에 정한 비율) 이상이어야 하며, 부족한 경우 입찰은 무효입니다.<br />
-        3. 대리인이 입찰할 때에는 반드시 대리권 수여를 증명하는 위임장 및 인감증명서(또는 본인서명사실확인서)를 첨부하여야 합니다.
+      <!-- 주의사항 -->
+      <div class="caution-block">
+        <h2 class="caution-title">주 의 사 항</h2>
+        <p>1. 입찰표는 물건마다 별도로 작성하되 <b>일괄매각</b>은 1매의 용지를 사용하고, 한 사건에 물건이 여러 개이고 개별매각을 하는 경우에는 물건번호를 반드시 기재하십시오.</p>
+        <p>2. 입찰자가 <b>개인</b>인 경우에는 성명·주민등록번호·주민등록상 주소를 기재, <b>법인</b>인 경우에는 법인명·대표자의 지위 및 성명·사업자등록번호·본점 소재지를 기재하고 대표자의 자격을 증명하는 서면(법인등기사항증명서)을 첨부하여야 합니다.</p>
+        <p>3. <b><u>입찰가격은 절대 수정할 수 없으며, 잘못 기재한 경우 새 용지를 사용</u></b>해야 합니다.</p>
+        <p>4. 제출된 입찰표는 취소·변경·교환할 수 없습니다.</p>
+        <p>5. <b>대리입찰</b>의 경우에는 본인과 대리인의 인적사항 및 관계를 기재하고, <b><u>위임장(입찰표 뒷면 사용)</u></b>과 인감증명을 첨부하십시오. 공동입찰의 경우에는 입찰표와 공동입찰신고서를 함께 제출하되, 입찰표 본인란에 “별첨 공동입찰자목록 기재와 같음”이라고 기재 후 입찰표와 공동입찰신고서 사이에는 공동입찰자 전원이 간인하십시오.</p>
+        <p>6. 보증의 제공방법(현금·자기앞수표, 보증서) 중 하나를 선택하여 <b>☑</b>표시를 하십시오.</p>
       </div>
     </div>
 
-    <!-- [2페이지] 위임장 (대리입찰 전용) -->
-    <div class="court-sheet" id="courtSheetPoa">
-      <div class="court-title-box">
-        <h1>위 &nbsp;&nbsp; 임 &nbsp;&nbsp; 장</h1>
-        <p>(부동산경매 대리입찰 위임용)</p>
-      </div>
+    <!-- [2쪽] 위임장 (뒷면) -->
+    <div class="sheet sheet-poa" id="courtSheetPoa">
+      <p class="poa-back">(뒷면)</p>
+      <h1 class="poa-title">위&nbsp;&nbsp;&nbsp;임&nbsp;&nbsp;&nbsp;장</h1>
 
-      <div style="margin-bottom: 14px; font-size: 11pt; font-weight: 700;">
-        사건번호: <span class="court-val" id="poaCaseNumber" style="font-size: 12pt; color: #000;">2026 타경 00000</span>
-      </div>
-
-      <!-- 수임인 (대리인) -->
-      <table class="court-table" style="margin-bottom: 20px;">
+      <table class="poa-table agent-table">
         <colgroup>
-          <col style="width: 16%;" />
-          <col style="width: 34%;" />
-          <col style="width: 16%;" />
-          <col style="width: 34%;" />
+          <col class="pa1" /><col class="pa2" /><col class="pa3" /><col class="pa4" /><col class="pa5" />
         </colgroup>
         <tbody>
           <tr>
-            <th colspan="4" style="background: #e6e6e6; font-size: 10pt;">대 리 인 (수 임 인)</th>
+            <td rowspan="3" class="c-label c-vert"><span>대</span><span>리</span><span>인</span></td>
+            <td class="c-label">성 명</td>
+            <td class="c-value" id="pPoaAgentName"></td>
+            <td class="c-label">직업</td>
+            <td class="c-value" id="pPoaAgentJob"></td>
           </tr>
           <tr>
-            <th>성 명</th>
-            <td><span class="court-val" id="poaAgentName" style="font-weight: 700;">박지은</span></td>
-            <th>본인과의 관계</th>
-            <td><span class="court-val" id="poaAgentRelation">매수신청대리인</span></td>
+            <td class="c-label">주민등록번호</td>
+            <td class="c-value" id="pPoaAgentRrn"></td>
+            <td class="c-label">전화번호</td>
+            <td class="c-value" id="pPoaAgentPhone"></td>
           </tr>
           <tr>
-            <th>주민등록번호</th>
-            <td><span class="court-val" id="poaAgentRrn">공인중개사 정식등록</span></td>
-            <th>전화번호</th>
-            <td><span class="court-val" id="poaAgentPhone">010-7308-8284</span></td>
-          </tr>
-          <tr>
-            <th>주 소</th>
-            <td colspan="3"><span class="court-val" id="poaAgentAddr">경기도 시흥시 시청로 25, 3층 341호 (모다부동산법원경매)</span></td>
+            <td class="c-label">주 소</td>
+            <td colspan="3" class="c-value" id="pPoaAgentAddr"></td>
           </tr>
         </tbody>
       </table>
 
-      <!-- 위임 사항 -->
-      <div style="border: 1px solid #000; padding: 16px 20px; margin-bottom: 24px; line-height: 1.8; font-size: 10pt;">
-        <div style="font-weight: 800; text-align: center; margin-bottom: 8px; font-size: 11pt;">[ 위 임 사 항 ]</div>
-        위 대리인에게 위 사건에 관한 다음 각 호의 권한 일체를 위임합니다.<br />
-        1. 위 사건의 매각기일에 출석하여 기일입찰표를 작성하고 제출하는 행위<br />
-        2. 입찰보증금을 제공하고, 패찰(유찰) 시 그 자리에서 매수신청보증금을 반환 영수하는 행위<br />
-        3. 차순위매수신고 및 그에 관한 보증금 제공 및 반환 영수 행위<br />
-        4. 기타 위 사건의 기일입찰 절차에 부수되는 일체의 권한
-      </div>
+      <p class="poa-sentence">위 사람을 대리인으로 정하고 다음 사항을 위임함.</p>
 
-      <!-- 위임인 (본인) -->
-      <div style="border: 2px solid #000; padding: 20px; font-size: 10pt; line-height: 2;">
-        <div style="font-weight: 800; font-size: 11pt; margin-bottom: 8px; text-align: center;">위 임 인 (본 인)</div>
-        <div style="display: flex; margin-bottom: 4px;">
-          <div style="width: 100px; font-weight: 700;">성 &nbsp;&nbsp;&nbsp;&nbsp; 명:</div>
-          <div><span class="court-val" id="poaBidderName" style="font-weight: 800; font-size: 12pt;">홍길동</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (인감날인 또는 자필서명)</div>
-        </div>
-        <div style="display: flex; margin-bottom: 4px;">
-          <div style="width: 100px; font-weight: 700;">주민등록번호:</div>
-          <div><span class="court-val" id="poaBidderRrn">800101-1234567</span></div>
-        </div>
-        <div style="display: flex;">
-          <div style="width: 100px; font-weight: 700;">주 &nbsp;&nbsp;&nbsp;&nbsp; 소:</div>
-          <div><span class="court-val" id="poaBidderAddr">경기도 시흥시 시청로 25</span></div>
-        </div>
-      </div>
+      <p class="poa-next">다&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;음</p>
 
-      <div style="margin-top: 30px; text-align: center; font-size: 10pt;">
-        <strong>대한민국 법원 귀중</strong>
-      </div>
+      <p class="poa-case" id="pPoaCaseLine">수원지방법원 안산지원&nbsp;&nbsp;&nbsp;&nbsp;2026 타경&nbsp;&nbsp;&nbsp;12345&nbsp;&nbsp;호 부동산</p>
+      <p class="poa-scope">경매사건에 관한 입찰행위 일체</p>
+
+      <table class="poa-table person-table">
+        <colgroup>
+          <col class="pb1" /><col class="pb2" /><col class="pb3" /><col class="pb4" /><col class="pb5" />
+        </colgroup>
+        <tbody>
+          <tr>
+            <td rowspan="3" class="c-label c-vert"><span>본</span><span>인</span><span>1</span></td>
+            <td class="c-label">성 명</td>
+            <td class="c-value" id="pPoaB1Name"></td>
+            <td class="c-label">직 업</td>
+            <td class="c-value" id="pPoaB1Job"></td>
+          </tr>
+          <tr>
+            <td class="c-label">주민등록번호</td>
+            <td class="c-value" id="pPoaB1Rrn"></td>
+            <td class="c-label">전 화 번 호</td>
+            <td class="c-value" id="pPoaB1Phone"></td>
+          </tr>
+          <tr>
+            <td class="c-label">주 소</td>
+            <td colspan="3" class="c-value" id="pPoaB1Addr"></td>
+          </tr>
+          <tr>
+            <td rowspan="3" class="c-label c-vert"><span>본</span><span>인</span><span>2</span></td>
+            <td class="c-label">성 명</td>
+            <td class="c-value"></td>
+            <td class="c-label">직 업</td>
+            <td class="c-value"></td>
+          </tr>
+          <tr>
+            <td class="c-label">주민등록번호</td>
+            <td class="c-value"></td>
+            <td class="c-label">전 화 번 호</td>
+            <td class="c-value"></td>
+          </tr>
+          <tr>
+            <td class="c-label">주 소</td>
+            <td colspan="3" class="c-value"></td>
+          </tr>
+          <tr>
+            <td rowspan="3" class="c-label c-vert"><span>본</span><span>인</span><span>3</span></td>
+            <td class="c-label">성 명</td>
+            <td class="c-value"></td>
+            <td class="c-label">직 업</td>
+            <td class="c-value"></td>
+          </tr>
+          <tr>
+            <td class="c-label">주민등록번호</td>
+            <td class="c-value"></td>
+            <td class="c-label">전 화 번 호</td>
+            <td class="c-value"></td>
+          </tr>
+          <tr>
+            <td class="c-label">주 소</td>
+            <td colspan="3" class="c-value"></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="poa-note">* 본인의 인감 증명서 첨부</p>
+      <p class="poa-note">* 본인이 법인인 경우에는 주민등록번호란에 사업자등록번호를 기재</p>
+
+      <p class="poa-to" id="pPoaTo">수원지방법원 안산지원 귀중</p>
     </div>
 
   </div>
 
-  
 </div>
 
 <footer class="site-footer">

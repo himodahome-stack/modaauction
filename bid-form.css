@@ -525,157 +525,599 @@
 }
 
 /* ==========================================================================
-   Court Printable Sheet Standards (기일입찰표 및 위임장 표준 서식)
+   [전산양식 A3360] 기일입찰표 · 위임장 인쇄 서식
+   - 대법원 전산양식 A3360(210mm × 297mm)의 표 구조·칸 너비·문구를 그대로 옮김
+   - 화면에서는 숨기고 인쇄(@media print)에서만 A4 1:1로 출력
    ========================================================================== */
 #courtPrintArea {
-  display: none; /* 화면에서는 숨기고 인쇄 및 모달 미리보기 시에만 표시 */
+  display: none;
   background: #ffffff;
 }
 
-.court-sheet {
+.sheet {
   width: 210mm;
   min-height: 297mm;
-  padding: 15mm 15mm;
+  padding: 11.5mm 30mm; /* 원본 여백: 상·하 652tw(11.5mm), 좌·우 1701tw(30mm) */
   margin: 0 auto;
   background: #ffffff;
   color: #000000;
-  font-family: 'Batang', 'Gungsuh', 'Noto Serif KR', serif;
-  box-sizing: border-box;
-  page-break-after: always;
-}
-
-.court-sheet:last-child {
-  page-break-after: avoid;
-}
-
-/* Sheet Typography & Table */
-.court-title-box {
-  text-align: center;
-  margin-bottom: 14px;
-  border-bottom: 2px solid #000;
-  padding-bottom: 8px;
-}
-
-.court-title-box h1 {
-  font-size: 24pt;
-  font-weight: 900;
-  letter-spacing: 0.35em;
-  margin-bottom: 6px;
-}
-
-.court-title-box p {
+  font-family: 'Batang', '바탕', 'Noto Serif KR', 'Nanum Myeongjo', serif;
   font-size: 9pt;
-  color: #333;
+  line-height: 1.15;
+  box-sizing: border-box;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
 }
 
-.court-meta-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-  font-size: 10pt;
+.sheet + .sheet {
+  margin-top: 8mm;
 }
 
-.court-table {
+/* ---------- 표 공통 ---------- */
+.form-table,
+.amount-table,
+.example-table,
+.poa-table {
   width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 14px;
-  font-size: 9.5pt;
   table-layout: fixed;
+  border-collapse: collapse;
 }
 
-.court-table th,
-.court-table td {
+.form-table td,
+.amount-table td,
+.example-table td,
+.poa-table td {
   border: 1px solid #000000;
-  padding: 6px 8px;
+  padding: 0.55mm 1.1mm;
   vertical-align: middle;
-  line-height: 1.45;
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
-.court-table th {
-  background: #f2f2f2;
-  font-weight: 700;
+/* 표 열 너비 — 원본 tblGrid(8484tw) 비율 */
+.w1 { width: 5.1155%; }
+.w2 { width: 3.9368%; }
+.w3 { width: 4.3023%; }
+.w4 { width: 12.6949%; }
+.w5 { width: 23.5973%; }
+.w6 { width: 6.8363%; }
+.w7 { width: 1.7209%; }
+.w8 { width: 8.8873%; }
+.w9 { width: 10.0778%; }
+.w10 { width: 22.8312%; }
+
+/* ---------- 칸 종류 ---------- */
+.c-label {
+  text-align: center;
+  font-size: 9pt;
+  font-weight: 400;
+  background: #ffffff;
+}
+
+.c-stack span {
+  display: block;
+}
+
+.c-vert span {
+  display: block;
+  line-height: 1.05;
+}
+
+.c-value {
+  font-size: 9pt;
+  text-align: left;
+  overflow-wrap: break-word;
+  line-height: 1.2;
+}
+
+.c-center {
   text-align: center;
 }
 
-.court-table .center {
-  text-align: center;
-}
-
-.court-table .right {
-  text-align: right;
-}
-
-.court-val {
-  font-family: 'Pretendard', sans-serif;
-  font-weight: 600;
-  color: #000;
-}
-
-.court-notice-box {
-  border: 1px dashed #666;
-  padding: 8px 12px;
+.c-note {
   font-size: 8pt;
-  line-height: 1.5;
-  color: #333;
-  margin-bottom: 12px;
+  text-align: left;
+  line-height: 1.2;
 }
 
-.court-sign-row {
+/* ---------- 1행: 표제 ---------- */
+.row-head {
+  height: 10.2mm;
+}
+
+.cell-head {
+  padding: 1mm 2mm 0.8mm !important;
+  text-align: center;
+}
+
+.head-line1 {
+  position: relative;
+}
+
+.head-side {
+  position: absolute;
+  left: 0;
+  top: 0.6mm;
+  font-size: 8pt;
+  letter-spacing: 0;
+}
+
+.head-title {
+  display: inline-block;
+  font-size: 15pt;
+  font-weight: 700;
+  letter-spacing: 0.42em;
+  text-indent: 0.42em;
+  line-height: 1.25;
+}
+
+.head-line2 {
   display: flex;
   justify-content: space-between;
+  align-items: flex-end;
+  font-size: 9pt;
+  margin-top: 1mm;
+}
+
+/* ---------- 사건번호 ---------- */
+.row-case {
+  height: 3.4mm;
+}
+
+.row-case-note {
+  height: 5.6mm;
+}
+
+.c-case {
+  font-size: 9.5pt;
+  letter-spacing: 0.02em;
+}
+
+/* ---------- 입찰자 / 대리인 ---------- */
+.row-bidder {
+  height: 8.1mm;
+}
+
+.row-agent {
+  height: 8.1mm;
+}
+
+/* ---------- 보증의 제공방법 · 반환 영수 ---------- */
+.row-deposit-method {
+  height: 9.4mm;
+}
+
+.cell-method {
+  padding: 0.8mm 1.4mm !important;
+}
+
+.method-row {
+  display: flex;
   align-items: center;
-  padding: 10px 20px;
-  border: 1px solid #000;
-  margin-top: 14px;
+  gap: 1.2mm;
+}
+
+.method-label {
+  width: 14mm;
+  flex-shrink: 0;
+  font-size: 7.5pt;
+  line-height: 1.15;
+  text-align: center;
+}
+
+.method-opts {
+  display: flex;
+  flex-direction: column;
+  gap: 1mm;
+  font-size: 9pt;
+  line-height: 1.1;
+}
+
+.method-opt .box {
+  display: inline-block;
+  width: 3.2mm;
+  text-align: center;
   font-size: 10pt;
+  line-height: 1;
+}
+
+.cell-return {
+  padding: 0.8mm 1.4mm !important;
+  font-size: 9pt;
+  line-height: 1.5;
+  text-align: left;
+}
+
+/* ---------- 보증금액 · 입찰가격 (12자리) ---------- */
+.row-amount > td {
+  padding: 0 !important;
+  border: 0 !important;
+}
+
+.amount-table td {
+  padding: 0.3mm 0;
+}
+
+.am-unit { width: 6.25%; }
+.am-digit { width: 7.5436%; }
+.am-won { width: 3.19%; }
+
+.am-head td {
+  height: 4mm;
+}
+
+.am-h {
+  text-align: center;
+  font-size: 8pt;
+  line-height: 1.1;
+}
+
+.am-digits td {
+  height: 9.3mm;
+}
+
+.dg {
+  text-align: center;
+  font-size: 14pt;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.am-won {
+  text-align: center;
+  font-size: 9pt;
+}
+
+.row-asterisk {
+  height: 5.7mm;
+}
+
+.row-asterisk > td {
+  border-top: 0 !important;
+  padding: 0.4mm 1.4mm !important;
+}
+
+.cell-asterisk {
+  font-size: 8.5pt;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+/* ---------- 기재 사례 ---------- */
+.example-block {
+  margin-top: 2.6mm;
+}
+
+.example-title {
+  text-align: center;
+  font-size: 8pt;
+  margin-bottom: 0.9mm;
+}
+
+.example-table td {
+  padding: 0.2mm 0;
+  height: 6mm;
+}
+
+.example-table .am-head td {
+  height: 3.6mm;
+}
+
+.ex-label {
+  text-align: center;
+  font-size: 7pt;
+  line-height: 1.1;
+}
+
+.example-table .ex-digits .dg {
+  font-size: 11pt;
+}
+
+.example-caption {
+  margin-top: 0.8mm;
+  font-size: 7.5pt;
+  text-align: center;
+}
+
+/* ---------- 주의사항 ---------- */
+.caution-block {
+  margin-top: 3.2mm;
+}
+
+.caution-title {
+  text-align: center;
+  font-size: 11pt;
+  font-weight: 700;
+  letter-spacing: 0.4em;
+  text-indent: 0.4em;
+  margin: 0 0 1.6mm;
+}
+
+.caution-block p {
+  margin: 0 0 0.85mm;
+  padding-left: 4.4mm;
+  text-indent: -4.4mm;
+  font-size: 9pt;
+  line-height: 1.42;
+  letter-spacing: -0.01em;
+}
+
+.caution-block p:last-child {
+  margin-bottom: 0;
 }
 
 /* ==========================================================================
-   @media print Rules (실제 브라우저 인쇄 시)
+   [2쪽] 위임장
+   ========================================================================== */
+.poa-back {
+  margin: 0 0 1mm;
+  font-size: 8pt;
+  letter-spacing: 0;
+}
+
+.poa-title {
+  margin: 0 0 5mm;
+  text-align: center;
+  font-size: 18.5pt;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-indent: 0.2em;
+}
+
+/* 위임장 대리인 표 — 원본 tblGrid 8414tw */
+.agent-table .pa1 { width: 4.87%; }
+.agent-table .pa2 { width: 17.71%; }
+.agent-table .pa3 { width: 27.16%; }
+.agent-table .pa4 { width: 11.62%; }
+.agent-table .pa5 { width: 38.64%; }
+
+.agent-table tr {
+  height: 9.8mm;
+}
+
+/* 위임장 본인 표 — 원본 tblGrid 8387tw */
+.person-table .pb1 { width: 4.54%; }
+.person-table .pb2 { width: 16.75%; }
+.person-table .pb3 { width: 37.75%; }
+.person-table .pb4 { width: 16.75%; }
+.person-table .pb5 { width: 24.21%; }
+
+.person-table tr {
+  height: 9.8mm;
+}
+
+.poa-table .c-label {
+  font-size: 8.5pt;
+  line-height: 1.2;
+}
+
+.poa-table .c-value {
+  font-size: 9pt;
+}
+
+.poa-sentence {
+  margin: 9mm 0 0;
+  text-align: center;
+  font-size: 10pt;
+}
+
+.poa-next {
+  margin: 7mm 0 0;
+  text-align: center;
+  font-size: 10pt;
+  letter-spacing: 0;
+}
+
+.poa-case {
+  margin: 9mm 0 0;
+  padding-left: 12mm;
+  font-size: 10pt;
+  letter-spacing: 0.02em;
+}
+
+.poa-scope {
+  margin: 6mm 0 0;
+  padding-left: 12mm;
+  font-size: 10pt;
+}
+
+.person-table {
+  margin-top: 9mm;
+}
+
+.poa-note {
+  margin: 2.4mm 0 0;
+  font-size: 9pt;
+  line-height: 1.35;
+}
+
+.poa-note + .poa-note {
+  margin-top: 1.2mm;
+}
+
+.poa-to {
+  margin: 26mm 0 0;
+  text-align: center;
+  font-size: 12.5pt;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+/* ==========================================================================
+   @media print — 양식 본문만 A4로 출력
    ========================================================================== */
 @media print {
   @page {
     size: A4 portrait;
-    margin: 10mm;
+    margin: 0;
   }
 
-  body * {
-    visibility: hidden;
+  html,
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
   }
 
-  #courtPrintArea,
-  #courtPrintArea * {
-    visibility: visible;
+  .site-header,
+  .page-hero,
+  .site-footer,
+  .kakao-float,
+  .skip-link,
+  .mobile-drawer,
+  .print-modal,
+  .bid-generator-page {
+    display: none !important;
+  }
+
+  #main {
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   #courtPrintArea {
     display: block !important;
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
+    position: static;
+    width: 210mm;
     margin: 0;
     padding: 0;
-    background: transparent;
+    background: #ffffff;
   }
 
-  .site-header,
-  .site-footer,
-  .mobile-floating-bar,
-  .bid-generator-page,
-  .print-modal {
+  .sheet {
+    width: 210mm;
+    min-height: 0;
+    padding: 11.5mm 30mm;
+    margin: 0;
+    box-shadow: none;
+    break-inside: avoid;
+  }
+
+  .sheet + .sheet {
+    margin-top: 0;
+    break-before: page;
+  }
+
+  #courtPrintArea.bid-only #courtSheetPoa {
     display: none !important;
   }
 
-  .court-sheet {
-    width: 100% !important;
-    min-height: auto !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    box-shadow: none !important;
-    page-break-after: always !important;
+  .example-table,
+  .amount-table,
+  .form-table,
+  .poa-table {
+    break-inside: avoid;
   }
+}
+
+/* 화면에서 1쪽만 나오는 경우 */
+#courtPrintArea.bid-only #courtSheetPoa {
+  display: none !important;
+}
+
+/* ==========================================================================
+   출력 방식 · 보증 제공방법 선택 UI
+   ========================================================================== */
+.print-mode-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.print-mode-label {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  background: #ffffff;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.print-mode-label:hover {
+  border-color: var(--gold);
+  background: var(--gold-tint);
+}
+
+.print-mode-label.is-active {
+  border-color: var(--gold);
+  background: var(--gold-tint);
+  box-shadow: inset 0 0 0 1px var(--gold);
+}
+
+.print-mode-label input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--pine);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.print-mode-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.print-mode-body .radio-main-title em {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--gold-ink);
+}
+
+.print-mode-pages {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--gold-ink);
+  background: #ffffff;
+  border: 1px solid var(--gold-bright);
+  border-radius: var(--radius-full);
+  padding: 4px 12px;
+}
+
+.guar-radio-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.guar-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 18px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--pine);
+  cursor: pointer;
+  background: #ffffff;
+}
+
+.guar-option:has(input:checked) {
+  border-color: var(--gold);
+  background: var(--gold-tint);
+}
+
+.guar-option input[type="radio"] {
+  accent-color: var(--pine);
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.print-help {
+  margin-top: 14px;
+  font-size: 0.8rem;
+  line-height: 1.7;
+  color: var(--text-muted);
 }
 
 /* ==========================================================================
