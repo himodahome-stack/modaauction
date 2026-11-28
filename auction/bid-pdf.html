@@ -229,7 +229,7 @@
             <select id="courtName" class="form-control form-select" required>
               <option value="">법원을 선택하세요</option>
               <optgroup label="수원지방법원 관할 (경기 남부)">
-                <option value="수원지방법원 안산지원" selected>수원지방법원 안산지원 (시흥·안산 관할)</option>
+                <option value="수원지방법원 안산지원">수원지방법원 안산지원 (시흥·안산 관할)</option>
                 <option value="수원지방법원 본원">수원지방법원 본원</option>
                 <option value="수원지방법원 안양지원">수원지방법원 안양지원</option>
                 <option value="수원지방법원 평택지원">수원지방법원 평택지원</option>
@@ -493,6 +493,10 @@
 
     <!-- [1쪽] 기일입찰표 (앞면) -->
     <div class="sheet sheet-bid">
+      <div class="doc-head">
+        <span>[전산양식 A3360] 기일입찰표(흰색)</span>
+        <span>용지규격 210mm×297mm(A4용지)</span>
+      </div>
       <table class="form-table">
         <colgroup>
           <col class="w1" /><col class="w2" /><col class="w3" /><col class="w4" /><col class="w5" />
@@ -502,11 +506,10 @@
           <tr class="row-head">
             <td colspan="10" class="cell-head">
               <div class="head-line1">
-                <span class="head-side">(앞면)</span>
                 <span class="head-title">기&nbsp;&nbsp;일&nbsp;&nbsp;입&nbsp;&nbsp;찰&nbsp;&nbsp;표</span>
               </div>
               <div class="head-line2">
-                <span id="pCourtLine">수원지방법원 안산지원&nbsp;&nbsp;&nbsp;&nbsp;집행관&nbsp;&nbsp;귀하</span>
+                <span id="pCourtLine">지방법원&nbsp;&nbsp;&nbsp;&nbsp;집행관&nbsp;&nbsp;귀하</span>
                 <span id="pBidDateLine">입찰기일 :&nbsp;&nbsp;2026년&nbsp;&nbsp;12월&nbsp;&nbsp;05일</span>
               </div>
             </td>
@@ -514,7 +517,7 @@
 
           <tr class="row-case">
             <td colspan="2" rowspan="2" class="c-label c-stack"><span>사 건</span><span>번 호</span></td>
-            <td colspan="5" rowspan="2" class="c-value c-center c-case" id="pCaseNumber">2026 타경 12345 호</td>
+            <td colspan="5" rowspan="2" class="c-value c-center c-case" id="pCaseNumber">&nbsp;년&nbsp;&nbsp;&nbsp;타경&nbsp;&nbsp;&nbsp;호</td>
             <td rowspan="2" class="c-label c-stack"><span>물건</span><span>번호</span></td>
             <td colspan="2" class="c-value c-center" id="pItemNumber">1</td>
           </tr>
@@ -526,7 +529,7 @@
             <td rowspan="6" class="c-label c-vert"><span>입</span><span>찰</span><span>자</span></td>
             <td colspan="2" rowspan="3" class="c-label">본인</td>
             <td class="c-label">성 명</td>
-            <td colspan="4" class="c-value" id="pBidderName"></td>
+            <td colspan="4" class="c-value c-seal"><span id="pBidderName"></span></td>
             <td class="c-label">전화번호</td>
             <td class="c-value" id="pBidderPhone"></td>
           </tr>
@@ -693,7 +696,7 @@
 
       <p class="poa-next">다&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;음</p>
 
-      <p class="poa-case" id="pPoaCaseLine">수원지방법원 안산지원&nbsp;&nbsp;&nbsp;&nbsp;2026 타경&nbsp;&nbsp;&nbsp;12345&nbsp;&nbsp;호 부동산</p>
+      <p class="poa-case" id="pPoaCaseLine">지방법원&nbsp;&nbsp;&nbsp;&nbsp;타경&nbsp;&nbsp;&nbsp;호 부동산</p>
       <p class="poa-scope">경매사건에 관한 입찰행위 일체</p>
 
       <table class="poa-table person-table">
@@ -704,7 +707,7 @@
           <tr>
             <td rowspan="3" class="c-label c-vert"><span>본</span><span>인</span><span>1</span></td>
             <td class="c-label">성 명</td>
-            <td class="c-value" id="pPoaB1Name"></td>
+            <td class="c-value c-seal"><span id="pPoaB1Name"></span></td>
             <td class="c-label">직 업</td>
             <td class="c-value" id="pPoaB1Job"></td>
           </tr>
@@ -721,7 +724,7 @@
           <tr>
             <td rowspan="3" class="c-label c-vert"><span>본</span><span>인</span><span>2</span></td>
             <td class="c-label">성 명</td>
-            <td class="c-value"></td>
+            <td class="c-value c-seal"></td>
             <td class="c-label">직 업</td>
             <td class="c-value"></td>
           </tr>
@@ -738,7 +741,7 @@
           <tr>
             <td rowspan="3" class="c-label c-vert"><span>본</span><span>인</span><span>3</span></td>
             <td class="c-label">성 명</td>
-            <td class="c-value"></td>
+            <td class="c-value c-seal"></td>
             <td class="c-label">직 업</td>
             <td class="c-value"></td>
           </tr>
@@ -758,7 +761,7 @@
       <p class="poa-note">* 본인의 인감 증명서 첨부</p>
       <p class="poa-note">* 본인이 법인인 경우에는 주민등록번호란에 사업자등록번호를 기재</p>
 
-      <p class="poa-to" id="pPoaTo">수원지방법원 안산지원 귀중</p>
+      <p class="poa-to" id="pPoaTo">지방법원 귀중</p>
     </div>
 
   </div>

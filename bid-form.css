@@ -527,6 +527,9 @@
 /* ==========================================================================
    [전산양식 A3360] 기일입찰표 · 위임장 인쇄 서식
    - 대법원 전산양식 A3360(210mm × 297mm)의 표 구조·칸 너비·문구를 그대로 옮김
+   - 2026-11-28: 실제 법원 교부용지 사진(30965·30966)에 맞춰 여백을 상하 10mm·
+     좌우 11mm로 좁히고(본문 폭 188mm) 행 높이·글자 크기를 실물 비율로 키워
+     1쪽·2쪽이 각각 A4 한 장을 꽉 채우도록 조정
    - 화면에서는 숨기고 인쇄(@media print)에서만 A4 1:1로 출력
    ========================================================================== */
 #courtPrintArea {
@@ -537,13 +540,13 @@
 .sheet {
   width: 210mm;
   min-height: 297mm;
-  padding: 11.5mm 30mm; /* 원본 여백: 상·하 652tw(11.5mm), 좌·우 1701tw(30mm) */
+  padding: 10mm 11mm 9mm;
   margin: 0 auto;
   background: #ffffff;
   color: #000000;
   font-family: 'Batang', '바탕', 'Noto Serif KR', 'Nanum Myeongjo', serif;
-  font-size: 9pt;
-  line-height: 1.15;
+  font-size: 10.5pt;
+  line-height: 1.2;
   box-sizing: border-box;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
@@ -551,6 +554,17 @@
 
 .sheet + .sheet {
   margin-top: 8mm;
+}
+
+/* ---------- 1쪽 머리글: [전산양식 A3360] · 용지규격 ---------- */
+.doc-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  font-size: 9pt;
+  line-height: 1.15;
+  margin: 0 0 1.6mm;
+  letter-spacing: 0;
 }
 
 /* ---------- 표 공통 ---------- */
@@ -568,7 +582,7 @@
 .example-table td,
 .poa-table td {
   border: 1px solid #000000;
-  padding: 0.55mm 1.1mm;
+  padding: 0.8mm 1.4mm;
   vertical-align: middle;
   word-break: keep-all;
   overflow-wrap: break-word;
@@ -589,10 +603,10 @@
 /* ---------- 칸 종류 ---------- */
 td.c-label {
   text-align: center;
-  font-size: 8.5pt;
+  font-size: 10pt;
   font-weight: 400;
-  line-height: 1.15;
-  padding: 0.5mm 0.6mm;
+  line-height: 1.2;
+  padding: 0.8mm 0.8mm;
   background: #ffffff;
 }
 
@@ -602,14 +616,14 @@ td.c-label {
 
 .c-vert span {
   display: block;
-  line-height: 1.05;
+  line-height: 1.15;
 }
 
 .c-value {
-  font-size: 9pt;
+  font-size: 10.5pt;
   text-align: left;
   overflow-wrap: break-word;
-  line-height: 1.2;
+  line-height: 1.25;
 }
 
 .c-center {
@@ -617,19 +631,41 @@ td.c-label {
 }
 
 .c-note {
-  font-size: 7pt;
+  font-size: 8.5pt;
   text-align: left;
-  line-height: 1.18;
-  padding: 0.5mm 0.6mm;
+  line-height: 1.25;
+  padding: 0.8mm 1mm;
+}
+
+/* 인(도장) 자리 표시 — 실물의 ㉦ 표시 */
+.c-seal {
+  position: relative;
+  padding-right: 9mm !important;
+}
+
+.c-seal::after {
+  content: '인';
+  position: absolute;
+  right: 1.4mm;
+  top: 50%;
+  width: 6.2mm;
+  height: 6.2mm;
+  margin-top: -3.1mm;
+  border: 0.3mm solid #000000;
+  border-radius: 50%;
+  font-size: 6.5pt;
+  line-height: 5.6mm;
+  text-align: center;
+  font-weight: 400;
 }
 
 /* ---------- 1행: 표제 ---------- */
 .row-head {
-  height: 10.2mm;
+  height: 16mm;
 }
 
 .cell-head {
-  padding: 1mm 2mm 0.8mm !important;
+  padding: 1.6mm 2.4mm 1.4mm !important;
   text-align: center;
 }
 
@@ -637,97 +673,86 @@ td.c-label {
   position: relative;
 }
 
-.head-side {
-  position: absolute;
-  left: 0;
-  top: 0.6mm;
-  font-size: 8pt;
-  letter-spacing: 0;
-}
-
 .head-title {
   display: inline-block;
-  font-size: 15pt;
+  font-size: 21pt;
   font-weight: 700;
-  letter-spacing: 0.42em;
-  text-indent: 0.42em;
-  line-height: 1.25;
+  letter-spacing: 0.44em;
+  text-indent: 0.44em;
+  line-height: 1.2;
 }
 
 .head-line2 {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  font-size: 9pt;
-  margin-top: 1mm;
+  font-size: 10.5pt;
+  margin-top: 1.6mm;
 }
 
 /* ---------- 사건번호 ---------- */
 .row-case {
-  height: 3.6mm;
+  height: 7mm;
 }
 
 .row-case-note {
-  height: 7.6mm;
+  height: 8mm;
 }
 
 .c-case {
-  font-size: 9.5pt;
+  font-size: 11.5pt;
   letter-spacing: 0.02em;
 }
 
 /* ---------- 입찰자 / 대리인 ---------- */
-.row-bidder {
-  height: 8.1mm;
-}
-
+.row-bidder,
 .row-agent {
-  height: 8.1mm;
+  height: 11mm;
 }
 
 /* ---------- 보증의 제공방법 · 반환 영수 ---------- */
 .row-deposit-method {
-  height: 9.4mm;
+  height: 15mm;
 }
 
 .cell-method {
-  padding: 0.8mm 1.4mm !important;
+  padding: 1.4mm 1.8mm !important;
 }
 
 .method-row {
   display: flex;
   align-items: center;
-  gap: 1.2mm;
+  gap: 1.6mm;
 }
 
 .method-label {
-  width: 14mm;
+  width: 17mm;
   flex-shrink: 0;
-  font-size: 7.5pt;
-  line-height: 1.15;
+  font-size: 9pt;
+  line-height: 1.2;
   text-align: center;
 }
 
 .method-opts {
   display: flex;
   flex-direction: column;
-  gap: 1mm;
-  font-size: 9pt;
+  gap: 1.6mm;
+  font-size: 10.5pt;
   line-height: 1.1;
 }
 
 .method-opt .box {
   display: inline-block;
-  width: 3.2mm;
+  width: 4mm;
   text-align: center;
-  font-size: 10pt;
+  font-size: 12pt;
   line-height: 1;
 }
 
 .cell-return {
-  padding: 0.8mm 1.4mm !important;
-  font-size: 9pt;
-  line-height: 1.5;
+  padding: 1.4mm 2mm !important;
+  font-size: 10.5pt;
+  line-height: 1.55;
   text-align: left;
 }
 
@@ -738,7 +763,7 @@ td.c-label {
 }
 
 .amount-table td {
-  padding: 0.3mm 0;
+  padding: 0.4mm 0;
 }
 
 .am-unit { width: 6.25%; }
@@ -746,22 +771,22 @@ td.c-label {
 .am-won { width: 3.19%; }
 
 .am-head td {
-  height: 4mm;
+  height: 5mm;
 }
 
 .am-h {
   text-align: center;
-  font-size: 8pt;
+  font-size: 9.5pt;
   line-height: 1.1;
 }
 
 .am-digits td {
-  height: 9.3mm;
+  height: 12mm;
 }
 
 .dg {
   text-align: center;
-  font-size: 14pt;
+  font-size: 17pt;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   line-height: 1;
@@ -769,20 +794,20 @@ td.c-label {
 
 .am-won {
   text-align: center;
-  font-size: 9pt;
+  font-size: 10pt;
 }
 
 .row-asterisk {
-  height: 5.7mm;
+  height: 6mm;
 }
 
 .row-asterisk > td {
   border-top: 0 !important;
-  padding: 0.4mm 1.4mm !important;
+  padding: 0.7mm 1.6mm !important;
 }
 
 .cell-asterisk {
-  font-size: 8.5pt;
+  font-size: 10pt;
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: -0.01em;
@@ -795,55 +820,55 @@ td.c-label {
 
 .example-title {
   text-align: center;
-  font-size: 8pt;
-  margin-bottom: 0.9mm;
+  font-size: 10pt;
+  margin-bottom: 1.2mm;
 }
 
 .example-table td {
-  padding: 0.2mm 0;
-  height: 6mm;
+  padding: 0.3mm 0;
+  height: 9mm;
 }
 
 .example-table .am-head td {
-  height: 3.6mm;
+  height: 5mm;
 }
 
 .ex-label {
   text-align: center;
-  font-size: 7pt;
-  line-height: 1.1;
+  font-size: 8.5pt;
+  line-height: 1.15;
 }
 
 .example-table .ex-digits .dg {
-  font-size: 11pt;
+  font-size: 14pt;
 }
 
 .example-caption {
-  margin-top: 0.8mm;
-  font-size: 7.5pt;
+  margin-top: 1.2mm;
+  font-size: 9pt;
   text-align: center;
 }
 
 /* ---------- 주의사항 ---------- */
 .caution-block {
-  margin-top: 3.2mm;
+  margin-top: 3.4mm;
 }
 
 .caution-title {
   text-align: center;
-  font-size: 11pt;
+  font-size: 13.5pt;
   font-weight: 700;
-  letter-spacing: 0.4em;
-  text-indent: 0.4em;
-  margin: 0 0 1.6mm;
+  letter-spacing: 0.42em;
+  text-indent: 0.42em;
+  margin: 0 0 2.4mm;
 }
 
 .caution-block p {
-  margin: 0 0 0.85mm;
-  padding-left: 4.4mm;
-  text-indent: -4.4mm;
-  font-size: 9pt;
-  line-height: 1.42;
+  margin: 0 0 1.2mm;
+  padding-left: 5mm;
+  text-indent: -5mm;
+  font-size: 10.5pt;
+  line-height: 1.52;
   letter-spacing: -0.01em;
 }
 
@@ -852,21 +877,21 @@ td.c-label {
 }
 
 /* ==========================================================================
-   [2쪽] 위임장
+   [2쪽] 위임장 — 실물(30966) 비율
    ========================================================================== */
 .poa-back {
-  margin: 0 0 1mm;
-  font-size: 8pt;
+  margin: 0 0 20mm;
+  font-size: 9pt;
   letter-spacing: 0;
 }
 
 .poa-title {
-  margin: 0 0 5mm;
+  margin: 0 0 11mm;
   text-align: center;
-  font-size: 18.5pt;
+  font-size: 25pt;
   font-weight: 700;
-  letter-spacing: 0.2em;
-  text-indent: 0.2em;
+  letter-spacing: 0.24em;
+  text-indent: 0.24em;
 }
 
 /* 위임장 대리인 표 — 원본 tblGrid 8414tw */
@@ -877,7 +902,7 @@ td.c-label {
 .agent-table .pa5 { width: 38.64%; }
 
 .agent-table tr {
-  height: 9.8mm;
+  height: 10.3mm;
 }
 
 /* 위임장 본인 표 — 원본 tblGrid 8387tw */
@@ -888,64 +913,66 @@ td.c-label {
 .person-table .pb5 { width: 24.21%; }
 
 .person-table tr {
-  height: 9.8mm;
+  height: 8.5mm;
 }
 
 .poa-table .c-label {
-  font-size: 8.5pt;
+  font-size: 10pt;
   line-height: 1.2;
 }
 
 .poa-table .c-value {
-  font-size: 9pt;
+  font-size: 10.5pt;
 }
 
 .poa-sentence {
-  margin: 9mm 0 0;
+  margin: 7.5mm 0 0;
   text-align: center;
-  font-size: 10pt;
+  font-size: 11pt;
 }
 
 .poa-next {
-  margin: 7mm 0 0;
+  margin: 11.5mm 0 0;
   text-align: center;
-  font-size: 10pt;
-  letter-spacing: 0;
+  font-size: 11pt;
+  letter-spacing: 0.1em;
 }
 
 .poa-case {
-  margin: 9mm 0 0;
+  margin: 11.5mm 0 0;
   padding-left: 12mm;
-  font-size: 10pt;
+  font-size: 11pt;
   letter-spacing: 0.02em;
 }
 
 .poa-scope {
-  margin: 6mm 0 0;
+  margin: 4.5mm 0 0;
   padding-left: 12mm;
-  font-size: 10pt;
+  font-size: 11pt;
 }
 
 .person-table {
-  margin-top: 9mm;
+  margin-top: 10mm;
 }
 
 .poa-note {
-  margin: 2.4mm 0 0;
-  font-size: 9pt;
-  line-height: 1.35;
+  margin: 5mm 0 0;
+  padding-left: 3mm;
+  font-size: 10pt;
+  line-height: 1.4;
 }
 
 .poa-note + .poa-note {
-  margin-top: 1.2mm;
+  margin-top: 1.4mm;
 }
 
 .poa-to {
-  margin: 26mm 0 0;
-  text-align: center;
-  font-size: 12.5pt;
+  margin: 17mm 0 0;
+  padding-left: 3mm;
+  text-align: left;
+  font-size: 15pt;
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
 }
 
 /* ==========================================================================
@@ -992,7 +1019,7 @@ td.c-label {
   .sheet {
     width: 210mm;
     min-height: 0;
-    padding: 11.5mm 30mm;
+    padding: 10mm 11mm 9mm;
     margin: 0;
     box-shadow: none;
     break-inside: avoid;
