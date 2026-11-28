@@ -320,8 +320,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const depositVal = $('depositPrice').value || '';
 
     // ---- 1쪽 기일입찰표
-    setText('pCourtLine', courtName ? `${courtName}    집행관  귀하` : '지방법원    집행관  귀하');
-    setText('pBidDateLine', bidDate ? `입찰기일 :  ${bidDate}` : '입찰기일 :      년      월      일');
+    const NB = '\u00a0';
+    setText('pCourtLine', courtName ? `${courtName}${NB.repeat(4)}집행관${NB.repeat(2)}귀하` : `지방법원${NB.repeat(4)}집행관${NB.repeat(2)}귀하`);
+    setText('pBidDateLine', bidDate
+      ? `입찰기일 : ${NB.repeat(2)}${bidDate}`
+      : `입찰기일 :${NB.repeat(6)}년${NB.repeat(5)}월${NB.repeat(5)}일`);
     setText('pCaseNumber', `${caseYear} 타경 ${caseNum} 호`.replace(/\s+/g, ' '));
     setText('pItemNumber', itemNum || '1');
 
@@ -353,9 +356,10 @@ document.addEventListener('DOMContentLoaded', () => {
       setText('pPoaAgentPhone', agentPhone);
       setText('pPoaAgentAddr', agentAddr);
 
+      const NB2 = '\u00a0';
       setText('pPoaCaseLine', courtName
-        ? `${courtName}    ${caseYear} 타경   ${caseNum}  호 부동산`
-        : `지방법원    ${caseYear} 타경   ${caseNum}  호 부동산`);
+        ? `${courtName}${NB2.repeat(4)}${caseYear} 타경${NB2.repeat(3)}${caseNum}${NB2.repeat(2)}호 부동산`
+        : `지방법원${NB2.repeat(6)}${caseYear} 타경${NB2.repeat(3)}${caseNum}${NB2.repeat(2)}호 부동산`);
 
       setText('pPoaB1Name', bidderName);
       setText('pPoaB1Job', bidderJob);

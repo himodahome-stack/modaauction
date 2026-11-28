@@ -587,10 +587,12 @@
 .w10 { width: 22.8312%; }
 
 /* ---------- 칸 종류 ---------- */
-.c-label {
+td.c-label {
   text-align: center;
-  font-size: 9pt;
+  font-size: 8.5pt;
   font-weight: 400;
+  line-height: 1.15;
+  padding: 0.5mm 0.6mm;
   background: #ffffff;
 }
 
@@ -615,9 +617,10 @@
 }
 
 .c-note {
-  font-size: 8pt;
+  font-size: 7.5pt;
   text-align: left;
-  line-height: 1.2;
+  line-height: 1.15;
+  padding: 0.4mm 0.6mm;
 }
 
 /* ---------- 1행: 표제 ---------- */
@@ -661,11 +664,11 @@
 
 /* ---------- 사건번호 ---------- */
 .row-case {
-  height: 3.4mm;
+  height: 3.6mm;
 }
 
 .row-case-note {
-  height: 5.6mm;
+  height: 6.8mm;
 }
 
 .c-case {
