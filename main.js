@@ -29,6 +29,33 @@ document.addEventListener('DOMContentLoaded', function () {
     if (clean === path) a.classList.add('active');
   });
 
+  /* ---------- Preselect the court from the URL (?court=...) ----------
+   * 홈페이지 '진행 법원' 카드처럼 /auction/apply?court=수원지방법원 안산지원 으로
+   * 들어오면 신청서의 법원 선택값을 그 법원으로 맞춥니다. */
+  (function preselectCourt() {
+    var select = document.getElementById('court');
+    if (!select) return;
+    var wanted = '';
+    try {
+      wanted = (new URLSearchParams(window.location.search).get('court') || '').trim();
+    } catch (e) {
+      wanted = '';
+    }
+    if (!wanted) return;
+    var normalize = function (s) { return String(s || '').replace(/\s+/g, ' ').trim(); };
+    var target = normalize(wanted);
+    var matched = false;
+    Array.prototype.forEach.call(select.options, function (option) {
+      if (matched) return;
+      if (normalize(option.value) === target || normalize(option.textContent) === target) {
+        select.value = option.value;
+        option.selected = true;
+        matched = true;
+      }
+    });
+    if (matched) select.dispatchEvent(new Event('change', { bubbles: true }));
+  })();
+
   /* ---------- Apply form ---------- */
   var form = document.getElementById('applyForm');
   if (!form) return;
