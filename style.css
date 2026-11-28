@@ -776,6 +776,8 @@ section[id] { scroll-margin-top: calc(var(--header-height) + 16px); }
   color: var(--gold-deep);
   font-weight: 800;
 }
+.faq-answer-steps li { padding-left: 0; }
+.faq-answer-steps li::before { content: none; }
 .faq-foot {
   max-width: 900px;
   margin-top: 32px;
