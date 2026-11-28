@@ -1440,3 +1440,103 @@ section[id] { scroll-margin-top: calc(var(--header-height) + 16px); }
   .fee-highlight .fee-amount { font-size: 34px; }
   .form-submit-row .btn { width: 100%; }
 }
+
+/* ---------- 이달의 추천 경매 물건 (listings) ---------- */
+.filter-bar { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; }
+.filter-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: #fff;
+  color: var(--ink);
+  font-family: inherit; font-size: 14.5px; font-weight: 600; letter-spacing: -0.02em;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.filter-btn span { color: var(--text-muted); font-size: 12.5px; font-weight: 700; }
+.filter-btn:hover { border-color: var(--gold); color: var(--gold-ink); }
+.filter-btn.is-active { background: var(--pine); border-color: var(--pine); color: #fff; }
+.filter-btn.is-active span { color: var(--gold-bright); }
+.filter-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.filter-count { margin: 0 0 22px; color: var(--text-muted); font-size: 13.5px; }
+
+.listings-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.listing-card {
+  display: flex; flex-direction: column;
+  padding: 24px 24px 22px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+.listing-card:hover { border-color: #D8D2C1; box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.listing-card[hidden] { display: none; }
+.listing-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+.listing-type {
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background: var(--gold-tint);
+  color: var(--gold-ink);
+  font-size: 12px; font-weight: 800; letter-spacing: -0.01em;
+}
+.listing-fail { color: var(--text-muted); font-size: 12.5px; font-weight: 700; white-space: nowrap; }
+.listing-title { margin: 0 0 8px; font-size: 18px; line-height: 1.42; letter-spacing: -0.025em; }
+.listing-addr { margin: 0 0 10px; color: var(--ink); font-size: 13.5px; line-height: 1.6; }
+.listing-dong {
+  display: inline-block; margin-left: 4px; padding: 1px 7px;
+  border-radius: var(--radius-full);
+  background: #F1EFE6; color: var(--text-muted);
+  font-size: 11.5px; font-weight: 700;
+}
+.listing-area {
+  margin: 0 0 16px; padding-bottom: 16px;
+  border-bottom: 1px dashed var(--border);
+  color: var(--text-muted); font-size: 12.8px; line-height: 1.65;
+}
+.listing-price { display: grid; gap: 8px; margin-bottom: 14px; }
+.listing-price-row { display: flex; align-items: baseline; gap: 10px; }
+.listing-price-row > span:first-child { flex: 0 0 46px; color: var(--text-muted); font-size: 12.5px; font-weight: 600; }
+.listing-appraisal { color: var(--text-muted); font-size: 14.5px; font-weight: 600; }
+.listing-price-min { align-items: center; }
+.listing-price-min strong { color: var(--gold-deep); font-size: 21px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.2; }
+.listing-price-min em {
+  margin-left: auto; padding: 3px 8px;
+  border-radius: var(--radius-full);
+  background: #EFF2ED; color: #3F5A50;
+  font-size: 11.5px; font-style: normal; font-weight: 700; white-space: nowrap;
+}
+.listing-date {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  margin: 0 0 18px; padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-soft);
+}
+.listing-date span { color: var(--text-muted); font-size: 12.5px; font-weight: 600; }
+.listing-date strong { color: var(--text-main); font-size: 14.5px; }
+.listing-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: auto; }
+.listing-actions .btn { padding: 10px 6px; font-size: 13.5px; }
+.listings-empty { margin: 10px 0 0; color: var(--text-muted); font-size: 14px; }
+.listings-note { margin: 26px 0 0; color: var(--text-muted); font-size: 13px; line-height: 1.75; }
+
+/* 다크 밴드(홈 미리보기) 안에서 */
+.section-dark .eyebrow { color: var(--gold-bright); }
+.section-dark .eyebrow::before { background: var(--gold-bright); }
+.section-dark .section-lead { color: #C9D0C6; }
+.section-dark .listing-card { color: var(--ink); }
+.section-dark .listing-card h3 { color: var(--text-main); }
+.section-dark .listing-card .listing-addr { color: var(--ink); }
+.text-link-light { color: var(--gold-bright); }
+.text-link-light:hover { color: #E4CFA4; }
+.listings-foot { margin: 24px 0 0; color: #A9B2A6; font-size: 13.5px; line-height: 1.75; }
+
+@media (max-width: 1040px) {
+  .listings-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 680px) {
+  .listings-grid { grid-template-columns: 1fr; gap: 14px; }
+  .listing-card { padding: 20px 18px 18px; }
+  .listing-price-min strong { font-size: 19px; }
+  .filter-count { margin-bottom: 18px; }
+}
