@@ -1499,7 +1499,8 @@ section[id] { scroll-margin-top: calc(var(--header-height) + 16px); }
 .listing-price-row { display: flex; align-items: baseline; gap: 10px; }
 .listing-price-row > span:first-child { flex: 0 0 46px; color: var(--text-muted); font-size: 12.5px; font-weight: 600; }
 .listing-appraisal { color: var(--text-muted); font-size: 14.5px; font-weight: 600; }
-.listing-price-min { align-items: center; }
+.listing-price-min { align-items: center; flex-wrap: wrap; row-gap: 6px; }
+.listing-price-min strong { white-space: nowrap; }
 .listing-price-min strong { color: var(--gold-deep); font-size: 21px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.2; }
 .listing-price-min em {
   margin-left: auto; padding: 3px 8px;
